@@ -36,6 +36,13 @@ public struct RealMatrix {
         self.columns = columns
         self.elements = RealArray(elements)
     }
+    
+    public init(rows: Int, columns: Int, elements: RealArray) {
+        assert(rows * columns == elements.count)
+        self.rows = rows
+        self.columns = columns
+        self.elements = elements
+    }
 
     /// Construct a Matrix of `rows` by `columns` with every element initialized to `repeatedValue`.
     public init(rows: Int, columns: Int, repeatedValue: Real) {
