@@ -25,59 +25,59 @@ public func mul(lhs: Matrix<Double>, rhs: Matrix<Double>, inout result: Matrix<D
     precondition(lhs.columns == rhs.rows, "Input matrices dimensions not compatible with multiplication")
     precondition(lhs.rows == result.rows, "Output matrix dimensions not compatible with multiplication")
     precondition(rhs.columns == result.columns, "Output matrix dimensions not compatible with multiplication")
-    
+
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, Int32(lhs.rows), Int32(rhs.columns), Int32(lhs.columns), 1.0, lhs.elements, Int32(lhs.columns), rhs.elements, Int32(rhs.columns), 0.0, &(result.elements), Int32(result.columns))
 }
 
 public func inv(x : Matrix<Float>) -> Matrix<Float> {
     precondition(x.rows == x.columns, "Matrix must be square")
-    
+
     var results = x
-    
+
     var ipiv = [__CLPK_integer](count: x.rows * x.rows, repeatedValue: 0)
     var lwork = __CLPK_integer(x.columns * x.columns)
     var work = [CFloat](count: Int(lwork), repeatedValue: 0.0)
     var error: __CLPK_integer = 0
     var nc = __CLPK_integer(x.columns)
-    
+
     sgetrf_(&nc, &nc, &(results.elements), &nc, &ipiv, &error)
     sgetri_(&nc, &(results.elements), &nc, &ipiv, &work, &lwork, &error)
-    
+
     assert(error == 0, "Matrix not invertible")
-    
+
     return results
 }
 
 public func inv(x : Matrix<Double>) -> Matrix<Double> {
     precondition(x.rows == x.columns, "Matrix must be square")
-    
+
     var results = x
-    
+
     var ipiv = [__CLPK_integer](count: x.rows * x.rows, repeatedValue: 0)
     var lwork = __CLPK_integer(x.columns * x.columns)
     var work = [CDouble](count: Int(lwork), repeatedValue: 0.0)
     var error: __CLPK_integer = 0
     var nc = __CLPK_integer(x.columns)
-    
+
     dgetrf_(&nc, &nc, &(results.elements), &nc, &ipiv, &error)
     dgetri_(&nc, &(results.elements), &nc, &ipiv, &work, &lwork, &error)
-    
+
     assert(error == 0, "Matrix not invertible")
-    
+
     return results
 }
 
 public func transpose(x: Matrix<Float>) -> Matrix<Float> {
     var results = Matrix<Float>(rows: x.columns, columns: x.rows, repeatedValue: 0.0)
     vDSP_mtrans(x.elements, 1, &(results.elements), 1, vDSP_Length(results.rows), vDSP_Length(results.columns))
-    
+
     return results
 }
 
 public func transpose(x: Matrix<Double>) -> Matrix<Double> {
     var results = Matrix<Double>(rows: x.columns, columns: x.rows, repeatedValue: 0.0)
     vDSP_mtransD(x.elements, 1, &(results.elements), 1, vDSP_Length(results.rows), vDSP_Length(results.columns))
-    
+
     return results
 }
 
@@ -85,77 +85,156 @@ public func transpose(x: Matrix<Double>) -> Matrix<Double> {
 
 public func += (inout lhs: Matrix<Float>, rhs: Matrix<Float>) {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
-    
+
     cblas_saxpy(Int32(lhs.elements.count), 1.0, rhs.elements, 1, &lhs.elements, 1)
 }
 
 public func += (inout lhs: Matrix<Double>, rhs: Matrix<Double>) {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
-    
+
     cblas_daxpy(Int32(lhs.elements.count), 1.0, rhs.elements, 1, &lhs.elements, 1)
 }
 
-public func + (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
+public func += (inout lhs: RealMatrix, rhs: RealArray) {
+    precondition((lhs.columns == 1) || (lhs.rows == 1), "Matrix-vector addition require one matrix dimension to be 1")
+
+    if (lhs.columns == 1) {
+        precondition(lhs.rows == rhs.count, "Matrix dimension not compatible with vector being added")
+    } else if (lhs.rows == 1) {
+        precondition(lhs.columns == rhs.count, "Matrix dimension not compatible with vector being added")
+    }
+
+    lhs.elements += rhs
+}
+
+public func += (inout lhs: RealArray, rhs: RealMatrix) {
+    precondition((rhs.columns == 1) || (rhs.rows == 1), "Matrix-vector addition require one matrix dimension to be 1")
+
+    if (rhs.columns == 1) {
+        precondition(rhs.rows == lhs.count, "Matrix dimension not compatible with vector being added")
+    } else if (rhs.rows == 1) {
+        precondition(rhs.columns == lhs.count, "Matrix dimension not compatible with vector being added")
+    }
+
+    lhs += rhs.elements
+}
+
+public func + (lhs: RealMatrix, rhs: RealMatrix) -> RealMatrix {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
-    
+
     var results = lhs
     results += rhs
-    
+
     return results
 }
 
-public func + (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
+public func + (inout lhs: RealMatrix, rhs: RealArray) -> RealMatrix {
+    precondition((lhs.columns == 1) || (lhs.rows == 1), "Matrix-vector addition require one matrix dimension to be 1")
+
+    if (lhs.columns == 1) {
+        precondition(lhs.rows == rhs.count, "Matrix dimension not compatible with vector being added")
+    } else if (lhs.rows == 1) {
+        precondition(lhs.columns == rhs.count, "Matrix dimension not compatible with vector being added")
+    }
+
+    return RealMatrix(rows: lhs.rows, columns: lhs.columns, elements: lhs.elements + rhs)
+}
+
+public func + (inout lhs: RealArray, rhs: RealMatrix) -> RealMatrix {
+    precondition((rhs.columns == 1) || (rhs.rows == 1), "Matrix-vector addition require one matrix dimension to be 1")
+
+    if (rhs.columns == 1) {
+        precondition(rhs.rows == lhs.count, "Matrix dimension not compatible with vector being added")
+    } else if (rhs.rows == 1) {
+        precondition(rhs.columns == lhs.count, "Matrix dimension not compatible with vector being added")
+    }
+
+    return RealMatrix(rows: rhs.rows, columns: rhs.columns, elements: rhs.elements + lhs)
+}
+
+public func -= (inout lhs: RealMatrix, rhs: RealMatrix) {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
-    
+
     var results = lhs
     results += rhs
-    
+
     return results
 }
 
-public func -= (inout lhs: Matrix<Float>, rhs: Matrix<Float>) {
+public func -= (inout lhs: RealMatrix, rhs: RealArray) {
+    precondition((lhs.columns == 1) || (lhs.rows == 1), "Matrix-vector subtraction require one matrix dimension to be 1")
+
+    if (lhs.columns == 1) {
+        precondition(lhs.rows == rhs.count, "Matrix dimension not compatible with vector being subtracted")
+    } else if (lhs.rows == 1) {
+        precondition(lhs.columns == rhs.count, "Matrix dimension not compatible with vector being subtracted")
+    }
+
+    lhs.elements -= rhs
+}
+
+public func -= (inout lhs: RealArray, rhs: RealMatrix) {
+    precondition((rhs.columns == 1) || (rhs.rows == 1), "Matrix-vector subtraction require one matrix dimension to be 1")
+
+    if (rhs.columns == 1) {
+        precondition(rhs.rows == lhs.count, "Matrix dimension not compatible with vector being subtracted")
+    } else if (rhs.rows == 1) {
+        precondition(rhs.columns == lhs.count, "Matrix dimension not compatible with vector being subtracted")
+    }
+
+    lhs -= rhs.elements
+}
+
+public func - (lhs: RealMatrix, rhs: RealMatrix) -> RealMatrix {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
-    
+
     cblas_saxpy(Int32(lhs.elements.count), -1.0, rhs.elements, 1, &lhs.elements, 1)
 }
 
 public func -= (inout lhs: Matrix<Double>, rhs: Matrix<Double>) {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
-    
+
     cblas_daxpy(Int32(lhs.elements.count), -1.0, rhs.elements, 1, &lhs.elements, 1)
 }
 
 public func - (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
-    
+
     var results = lhs
     results -= rhs
-    
+
     return results
 }
 
-public func - (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
-    precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
-    
-    var results = lhs
-    results -= rhs
-    
-    return results
+public func - (inout lhs: RealMatrix, rhs: RealArray) -> RealMatrix {
+    precondition((lhs.columns == 1) || (lhs.rows == 1), "Matrix-vector addition require one matrix dimension to be 1")
+
+    if (lhs.columns == 1) {
+        precondition(lhs.rows == rhs.count, "Matrix dimension not compatible with vector being added")
+    } else if (lhs.rows == 1) {
+        precondition(lhs.columns == rhs.count, "Matrix dimension not compatible with vector being added")
+    }
+
+    return RealMatrix(rows: lhs.rows, columns: lhs.columns, elements: lhs.elements - rhs)
 }
 
-public func *= (inout lhs: Matrix<Double>, rhs: Matrix<Double>) {
+public func - (inout lhs: RealArray, rhs: RealMatrix) -> RealMatrix {
+    precondition((rhs.columns == 1) || (rhs.rows == 1), "Matrix-vector addition require one matrix dimension to be 1")
+
+    if (rhs.columns == 1) {
+        precondition(rhs.rows == lhs.count, "Matrix dimension not compatible with vector being added")
+    } else if (rhs.rows == 1) {
+        precondition(rhs.columns == lhs.count, "Matrix dimension not compatible with vector being added")
+    }
+
+    return RealMatrix(rows: rhs.rows, columns: rhs.columns, elements: lhs - rhs.elements)
+}
+
+public func *= (inout lhs: RealMatrix, rhs: RealMatrix) {
     precondition(lhs.columns == lhs.rows, "Matrix dimensions not compatible with multiplication")
     precondition(rhs.columns == rhs.rows, "Matrix dimensions not compatible with multiplication")
     precondition(lhs.columns == rhs.columns, "Matrix dimensions not compatible with multiplication")
-    
-    lhs = lhs * rhs
-}
 
-public func *= (inout lhs: Matrix<Float>, rhs: Matrix<Float>) {
-    precondition(lhs.columns == lhs.rows, "Matrix dimensions not compatible with multiplication")
-    precondition(rhs.columns == rhs.rows, "Matrix dimensions not compatible with multiplication")
-    precondition(lhs.columns == rhs.columns, "Matrix dimensions not compatible with multiplication")
-    
     lhs = lhs * rhs
 }
 
@@ -170,32 +249,32 @@ public func *= (inout lhs: Matrix<Double>, rhs: Double) {
 public func * (lhs: Float, rhs: Matrix<Float>) -> Matrix<Float> {
     var results = rhs
     results *= lhs
-    
+
     return results
 }
 
 public func * (lhs: Double, rhs: Matrix<Double>) -> Matrix<Double> {
     var results = rhs
     results *= lhs
-    
+
     return results
 }
 
 public func * (lhs: Matrix<Float>, rhs: Matrix<Float>) -> Matrix<Float> {
     precondition(lhs.columns == rhs.rows, "Matrix dimensions not compatible with multiplication")
-    
+
     var results = Matrix<Float>(rows: lhs.rows, columns: rhs.columns, repeatedValue: 0.0)
     cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, Int32(lhs.rows), Int32(rhs.columns), Int32(lhs.columns), 1.0, lhs.elements, Int32(lhs.columns), rhs.elements, Int32(rhs.columns), 0.0, &(results.elements), Int32(results.columns))
-    
+
     return results
 }
 
 public func * (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
     precondition(lhs.columns == rhs.rows, "Matrix dimensions not compatible with multiplication")
-    
+
     var results = Matrix<Double>(rows: lhs.rows, columns: rhs.columns, repeatedValue: 0.0)
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, Int32(lhs.rows), Int32(rhs.columns), Int32(lhs.columns), 1.0, lhs.elements, Int32(lhs.columns), rhs.elements, Int32(rhs.columns), 0.0, &(results.elements), Int32(results.columns))
-    
+
     return results
 }
 
