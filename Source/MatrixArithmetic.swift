@@ -199,6 +199,40 @@ public func * (lhs: Matrix<Double>, rhs: Matrix<Double>) -> Matrix<Double> {
     return results
 }
 
+public func * (lhs: RealMatrix, rhs: RealArray) -> RealMatrix {
+    precondition((lhs.columns == rhs.count) || (lhs.columns == 1), "Matrix dimensions not compatible with multiplication")
+    
+    var results = RealMatrix(rows: 0, columns: 0, repeatedValue: 0.0)
+    if lhs.columns == rhs.count {
+        results = RealMatrix(rows: lhs.rows, columns: 1, repeatedValue: 0.0)
+
+        vDSP_mmulD(lhs.pointer, 1, rhs.pointer, 1, results.pointer, 1, vDSP_Length(lhs.rows), vDSP_Length(1), vDSP_Length(lhs.columns))
+    } else if lhs.columns == 1 {
+        results = RealMatrix(rows: lhs.rows, columns: rhs.count, repeatedValue: 0.0)
+
+        vDSP_mmulD(lhs.pointer, 1, rhs.pointer, 1, results.pointer, 1, vDSP_Length(lhs.rows), vDSP_Length(rhs.count), vDSP_Length(lhs.columns))
+    }
+    
+    return results
+}
+
+public func * (lhs: RealArray, rhs: RealMatrix) -> RealMatrix {
+    precondition((rhs.rows == lhs.count) || (rhs.rows == 1), "Matrix dimensions not compatible with multiplication")
+    
+    var results = RealMatrix(rows: 0, columns: 0, repeatedValue: 0.0)
+    if rhs.rows == lhs.count {
+        results = RealMatrix(rows: 1, columns: rhs.columns, repeatedValue: 0.0)
+
+        vDSP_mmulD(lhs.pointer, 1, rhs.pointer, 1, results.pointer, 1, vDSP_Length(1), vDSP_Length(rhs.columns), vDSP_Length(rhs.rows))
+    } else if rhs.rows == 1 {
+        results = RealMatrix(rows: lhs.count, columns: rhs.columns, repeatedValue: 0.0)
+        
+        vDSP_mmulD(lhs.pointer, 1, rhs.pointer, 1, results.pointer, 1, vDSP_Length(lhs.count), vDSP_Length(rhs.columns), vDSP_Length(1))
+    }
+    
+    return results
+}
+
 postfix operator ′ {}
 public postfix func ′ (value: Matrix<Float>) -> Matrix<Float> {
     return transpose(value)
