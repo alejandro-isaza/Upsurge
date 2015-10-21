@@ -20,15 +20,24 @@
 
 import Accelerate
 
-public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
-    public typealias Element = T
-
+public struct RealMatrix {
     public let rows: Int
     public let columns: Int
-    public var elements: [Element]
+    public var elements: RealArray
+    
+    public var pointer: UnsafeMutablePointer<Real> {
+        return elements.pointer
+    }
 
     /// Construct a Matrix from an array of elements in row-major order--elemens in the same row are next to each other.
-    public init(rows: Int, columns: Int, elements: [Element]) {
+    public init(rows: Int, columns: Int, elements: [Real]) {
+        assert(rows * columns == elements.count)
+        self.rows = rows
+        self.columns = columns
+        self.elements = RealArray(elements)
+    }
+    
+    public init(rows: Int, columns: Int, elements: RealArray) {
         assert(rows * columns == elements.count)
         self.rows = rows
         self.columns = columns
@@ -36,17 +45,17 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
     }
 
     /// Construct a Matrix of `rows` by `columns` with every element initialized to `repeatedValue`.
-    public init(rows: Int, columns: Int, repeatedValue: Element) {
+    public init(rows: Int, columns: Int, repeatedValue: Real) {
         self.rows = rows
         self.columns = columns
-        self.elements = [Element](count: rows * columns, repeatedValue: repeatedValue)
+        self.elements = RealArray(count: rows * columns, repeatedValue: repeatedValue)
     }
 
     /// Construct a Matrix from an array of rows
-    public init(_ contents: [[Element]]) {
+    public init(_ contents: [[Real]]) {
         let m: Int = contents.count
         let n: Int = contents[0].count
-        let repeatedValue: Element = 0.0
+        let repeatedValue: Real = 0.0
 
         self.init(rows: m, columns: n, repeatedValue: repeatedValue)
 
@@ -55,7 +64,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
         }
     }
 
-    public subscript(row: Int, column: Int) -> Element {
+    public subscript(row: Int, column: Int) -> Real {
         get {
             assert(indexIsValidForRow(row, column: column))
             return elements[(row * columns) + column]
@@ -65,6 +74,10 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
             elements[(row * columns) + column] = newValue
         }
     }
+    
+    public func copy() -> RealMatrix {
+        return RealMatrix(rows: rows, columns: columns, elements: elements.copy())
+    }
 
     private func indexIsValidForRow(row: Int, column: Int) -> Bool {
         return row >= 0 && row < rows && column >= 0 && column < columns
@@ -73,7 +86,7 @@ public struct Matrix<T where T: FloatingPointType, T: FloatLiteralConvertible> {
 
 // MARK: - Printable
 
-extension Matrix: CustomStringConvertible {
+extension RealMatrix: CustomStringConvertible {
     public var description: String {
         var description = ""
 
@@ -100,8 +113,8 @@ extension Matrix: CustomStringConvertible {
 
 // MARK: - SequenceType
 
-extension Matrix: SequenceType {
-    public func generate() -> AnyGenerator<ArraySlice<Element>> {
+extension RealMatrix: SequenceType {
+    public func generate() -> AnyGenerator<MutableSlice<RealArray>> {
         let endIndex = rows * columns
         var nextRowStartIndex = 0
 
