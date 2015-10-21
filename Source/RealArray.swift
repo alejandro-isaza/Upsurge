@@ -107,11 +107,32 @@ public final class RealArray : MutableCollectionType, ArrayLiteralConvertible {
         endPointer.initializeFrom(values)
         count += values.count
     }
-
+    
+    public func append(to index: Int, with value: Element) {
+        print(index, count, capacity)
+        precondition(index > count - 1 && index < capacity)
+        append([Element](count: index + 1 - count, repeatedValue: value))
+    }
+    
     public func replaceRange<C: CollectionType where C.Index == Int, C.Generator.Element == Element>(range: Range<C.Index>, with values: C) {
+        precondition(range.endIndex <= count)
         for i in range {
             pointer[i] = values[i - range.startIndex]
         }
+    }
+    
+    public func replaceRange(range: Range<Int>, with value: Element) {
+        precondition(range.endIndex <= count)
+        for i in range {
+            pointer[i] = value
+        }
+    }
+    
+    public func fill(with value: Element) {
+        for i in 0..<capacity {
+            pointer[i] = value
+        }
+        count = capacity
     }
     
     public func toRowMatrix() -> RealMatrix {
