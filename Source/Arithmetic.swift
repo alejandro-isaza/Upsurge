@@ -69,6 +69,20 @@ public func std<M: ContiguousMemory where M.Element == Double>(x: M) -> Double {
     return sqrt(variance)
 }
 
+// Return slope and intercept of regression line for x and y
+public func linregress<MX: ContiguousMemory, MY: ContiguousMemory where MX.Element == Double, MY.Element == Double>(x: MX, _ y: MY) -> (slope: Double, intercept: Double) {
+    precondition(x.count == y.count, "Vectors must have equal count")
+    let meanx = mean(x)
+    let meany = mean(y)
+    let xy = x * y
+    let meanxy = mean(xy)
+    let meanx_sqr = measq(x)
+
+    let slope = ((meanx * meany) - meanxy)/((meanx * meanx) - meanx_sqr)
+    let intercept = meany - slope * meanx
+    return (slope, intercept)
+}
+
 public func mod<ML: ContiguousMemory, MR: ContiguousMemory where ML.Element == Double, MR.Element == Double>(lhs: ML, _ rhs: MR) -> ValueArray<Double> {
     precondition(lhs.step == 1, "mod doesn't support step values other than 1")
     let results = ValueArray<Double>(count: lhs.count)
