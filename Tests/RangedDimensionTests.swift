@@ -18,44 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import XCTest
+import Upsurge
 
-public struct RangedDimension : SequenceType, IntegerLiteralConvertible {
-    public typealias Element = Int
-    public var startIndex: Int
-    public var endIndex: Int
-    public var count: Int {
-        return endIndex - startIndex
+class RangedDimensionTests: XCTestCase {
+    var rangedDimension: RangedDimension?
+    var indexedDimension: RangedDimension?
+    
+    override func setUp() {
+        rangedDimension = 4...7
+        indexedDimension = 1
     }
     
-    public init(integerLiteral value: Int) {
-        startIndex = value
-        endIndex = value + 1
+    func testGenerator() {
+        var result = [Int]()
+        for i in rangedDimension! {
+            result.append(i)
+        }
+        for i in indexedDimension! {
+            result.append(i)
+        }
+        XCTAssertEqual(result, [4, 5, 6, 7, 1])
     }
-    
-    public init(range: Range<Int>) {
-        startIndex = range.startIndex
-        endIndex = range.endIndex
-    }
-    
-    public init(start: Int, end: Int) {
-        startIndex = start
-        endIndex = end
-    }
-    
-    public func generate() -> AnyGenerator<Element> {
-        var current = startIndex
-        return anyGenerator{ current < self.endIndex ? current++ : nil }
-    }
-    
-    public subscript(index: Int) -> Int {
-        return index
-    }
-}
 
-public func ...(min: Int, max: Int) -> RangedDimension {
-    return RangedDimension(start: min, end: max + 1)
-}
-
-public func ..<(min: Int, upper: Int) -> RangedDimension {
-    return RangedDimension(start: min, end: upper)
 }
