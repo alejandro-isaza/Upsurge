@@ -90,4 +90,14 @@ class TensorTests: XCTestCase {
         let expected = Tensor(dimensions: [2, 2, 2, 2], elements: [6.4, 2.4, 8.6, 0.2, 6.4, 1.5, 7.3, 1.1, 6.4, 2.4, 8.6, 0.2, 6.4, 1.5, 7.3, 1.1])
         XCTAssertEqual(t2, expected)
     }
+    
+    func testMatrixExtraction() {
+        var m = t2!.extractMatrix(1, 1, 0...1, 0...1)
+        var expected = RealMatrix([[4.2, 6.1], [8.7, 3.6]])
+        XCTAssertEqual(m, expected)
+        
+        m = t2!.extractMatrix(0, 1, 0, 1)
+        expected = RealMatrix([[1.5]])
+        XCTAssertEqual(m, expected)
+    }
 }

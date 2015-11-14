@@ -56,14 +56,10 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
     
     public subscript(indices: Int...) -> Element {
         get {
-            assert(indexIsValid(indices))
-            let index = constructIndex(indices)
-            return elements[index]
+            return self[indices]
         }
         set {
-            assert(indexIsValid(indices))
-            let index = constructIndex(indices)
-            elements[index] = newValue
+            self[indices] = newValue
         }
     }
 
@@ -82,22 +78,53 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
     
     public subscript(slice: RangedDimension...) -> TensorSlice<Element> {
         get {
-            return TensorSlice(base: self, slice: slice)
+            return self[slice]
         }
         set {
-            var tensorSlice = TensorSlice(base: self, slice: slice)
-            tensorSlice[tensorSlice.dimensions.map{ 0..<$0 }] = newValue
+            self[slice] = newValue
         }
     }
 
     public subscript(slice: RangedIndex) -> TensorSlice<Element> {
         get {
+            assert(rangedIndexIsValid(slice))
             return TensorSlice(base: self, slice: slice)
         }
         set {
+            assert(rangedIndexIsValid(slice))
             var tensorSlice = TensorSlice(base: self, slice: slice)
             tensorSlice[tensorSlice.dimensions.map{ 0..<$0 }] = newValue
         }
+    }
+    
+    /** preconditions:
+            - All but the last two dimensions of slice must be an specific index, not a range.
+            - If the second last dimension is a range, the last slice range must span the full dimension.
+              Otherwise, the last dimension has no restrictions
+     */
+    public func extractMatrix(slice: RangedIndex) -> Matrix<Element> {
+        assert(rangedIndexIsValid(slice))
+        _ = slice[0..<slice.count - 2].map{ assert($0.count == 1) }
+        if slice[slice.count - 2].count != 1 {
+            assert(slice.last!.count == dimensions.last!)
+        }
+        
+        let startIndex = slice.map{ $0.startIndex }
+        
+        let rows = slice[slice.count - 2].count
+        let columns = slice[slice.count - 1].count
+        
+        let pointerOffset = constructIndex(startIndex)
+        let count = slice.reduce(1){ (var val, dim) in
+            val *= dim.count
+            return val
+        }
+        
+        return Matrix(rows: rows, columns: columns, elements: elements[pointerOffset..<pointerOffset + count])
+    }
+    
+    public func extractMatrix(slice: RangedDimension...) -> Matrix<Element> {
+        return extractMatrix(slice)
     }
     
     public func copy() -> Tensor {
@@ -106,6 +133,7 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
     }
     
     private func constructIndex(indices: Index) -> Int {
+        assert(indexIsValid(indices))
         var index = indices[0]
         for (i, dim) in dimensions[1..<dimensions.count].enumerate() {
             index = (dim * index) + indices[i+1]
@@ -117,6 +145,16 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
         assert(indices.count == dimensions.count)
         for (i, index) in indices.enumerate() {
             if index < 0 && dimensions[i] <= index {
+                return false
+            }
+        }
+        return true
+    }
+    
+    public func rangedIndexIsValid(indices: RangedIndex) -> Bool {
+        assert(indices.count == dimensions.count)
+        for (i, range) in indices.enumerate() {
+            if range.startIndex < 0 && dimensions[i] <= range.endIndex {
                 return false
             }
         }
