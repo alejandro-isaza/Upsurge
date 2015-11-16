@@ -89,6 +89,7 @@ class TensorTests: XCTestCase {
         t2![1, 0...1, 0...1, 0...1] = t2![0, 0...1, 0...1, 0...1]
         let expected = Tensor(dimensions: [2, 2, 2, 2], elements: [6.4, 2.4, 8.6, 0.2, 6.4, 1.5, 7.3, 1.1, 6.4, 2.4, 8.6, 0.2, 6.4, 1.5, 7.3, 1.1])
         XCTAssertEqual(t2, expected)
+        XCTAssertEqual(t2![1, 0...1, 0...1, 0...1], t2![0, 0...1, 0...1, 0...1])
     }
     
     func testMatrixExtraction() {

@@ -21,8 +21,7 @@
 import Accelerate
 
 
-public class Tensor<ElementType where ElementType: CustomStringConvertible, ElementType: Equatable> {
-    public typealias RangedIndex = [RangedDimension]
+public class Tensor<ElementType where ElementType: CustomStringConvertible, ElementType: Equatable> : Equatable {
     public typealias Index = [Int]
     public typealias Element = ElementType
     
@@ -84,6 +83,15 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
             self[slice] = newValue
         }
     }
+    
+    public subscript(slice: [RangedDimension]) -> TensorSlice<Element> {
+        get {
+            return self[RangedIndex(index: slice)]
+        }
+        set {
+            self[RangedIndex(index: slice)] = newValue
+        }
+    }
 
     public subscript(slice: RangedIndex) -> TensorSlice<Element> {
         get {
@@ -93,7 +101,8 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
         set {
             assert(rangedIndexIsValid(slice))
             var tensorSlice = TensorSlice(base: self, slice: slice)
-            tensorSlice[tensorSlice.dimensions.map{ 0..<$0 }] = newValue
+            let index = RangedIndex(index: tensorSlice.dimensions.map{ 0..<$0 })
+            tensorSlice[index] = newValue
         }
     }
     
@@ -104,27 +113,22 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
      */
     public func extractMatrix(slice: RangedIndex) -> Matrix<Element> {
         assert(rangedIndexIsValid(slice))
-        _ = slice[0..<slice.count - 2].map{ assert($0.count == 1) }
-        if slice[slice.count - 2].count != 1 {
-            assert(slice.last!.count == dimensions.last!)
+        _ = slice.index[0..<slice.dimensions.count - 2].map{ assert($0.count == 1) }
+        if slice[slice.dimensions.count - 2].count != 1 {
+            assert(slice.index.last!.count == dimensions.last!)
         }
+                
+        let rows = slice[slice.dimensions.count - 2].count
+        let columns = slice[slice.dimensions.count - 1].count
         
-        let startIndex = slice.map{ $0.startIndex }
-        
-        let rows = slice[slice.count - 2].count
-        let columns = slice[slice.count - 1].count
-        
-        let pointerOffset = constructIndex(startIndex)
-        let count = slice.reduce(1){ (var val, dim) in
-            val *= dim.count
-            return val
-        }
+        let pointerOffset = constructIndex(slice.startIndex)
+        let count = slice.count
         
         return Matrix(rows: rows, columns: columns, elements: elements[pointerOffset..<pointerOffset + count])
     }
     
     public func extractMatrix(slice: RangedDimension...) -> Matrix<Element> {
-        return extractMatrix(slice)
+        return extractMatrix(RangedIndex(index: slice))
     }
     
     public func copy() -> Tensor {
@@ -152,7 +156,7 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
     }
     
     public func rangedIndexIsValid(indices: RangedIndex) -> Bool {
-        assert(indices.count == dimensions.count)
+        assert(indices.dimensions.count == dimensions.count)
         for (i, range) in indices.enumerate() {
             if range.startIndex < 0 && dimensions[i] <= range.endIndex {
                 return false
@@ -164,7 +168,6 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
 
 // MARK: - Equatable
 
-extension Tensor : Equatable {}
 public func ==<T: Equatable>(lhs: Tensor<T>, rhs: Tensor<T>) -> Bool {
     return lhs.elements == rhs.elements
 }

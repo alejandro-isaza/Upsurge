@@ -19,8 +19,7 @@
 // THE SOFTWARE.
 
 
-public struct TensorSlice<ElementType where ElementType: CustomStringConvertible, ElementType: Equatable> {
-    public typealias RangedIndex = [RangedDimension]
+public struct TensorSlice<ElementType where ElementType: CustomStringConvertible, ElementType: Equatable> : Equatable {
     public typealias Index = [Int]
     public typealias Element = ElementType
     
@@ -28,17 +27,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
     let dimensions: [Int]
     
     public var slice: RangedIndex
-    public var startIndices: [Int] {
-        get {
-            return slice.map{ $0.startIndex }
-        }
-    }
-    public var endIndices: [Int] {
-        get {
-            return slice.map{ $0.endIndex - 1 }
-        }
-    }
-    
+
     public var pointer: UnsafePointer<Element> {
         return base.pointer
     }
@@ -48,15 +37,15 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
     }
     
     public init(base: Tensor<Element>, slice: RangedIndex) {
-        assert(slice.count == base.dimensions.count)
+        assert(slice.dimensions.count == base.dimensions.count)
         self.base = base
         self.slice = slice
-        self.dimensions = slice.map{ $0.count }
+        self.dimensions = slice.dimensions
     }
     
     public subscript(indices: Int...) -> Element {
         get {
-            let index = indices.enumerate().map{ $1 + startIndices[$0] }
+            let index = zip(slice.startIndex, indices).map{ $0 + $1 }
             assert(indexIsValid(index))
             return base[index]
         }
@@ -69,12 +58,12 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
     
     public subscript(indices: Index) -> Element {
         get {
-            let index = indices.enumerate().map{ $1 + startIndices[$0] }
+            let index = indices.enumerate().map{ $1 + slice.startIndex[$0] }
             assert(indexIsValid(index))
             return base[index]
         }
         set {
-            let index = indices.enumerate().map{ $1 + startIndices[$0] }
+            let index = indices.enumerate().map{ $1 + slice.startIndex[$0] }
             assert(indexIsValid(index))
             base[index] = newValue
         }
@@ -83,48 +72,33 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
     public subscript(slice: RangedIndex) -> TensorSlice<Element> {
         get {
             assert(slice.count == self.slice.count)
-            let newSlice: RangedIndex = slice.enumerate().map{
-                assert((0 <= $1.startIndex) && ($1.endIndex <= dimensions[$0]))
-                return startIndices[$0] + $1.startIndex..<startIndices[$0] + $1.endIndex
-            }
-            return TensorSlice(base: base, slice: newSlice)
+            assert(rangedIndexIsValid(slice))
+            let baseSlice = RangedIndex(index: zip(slice.startIndex, slice.index).map{
+                return $0 + $1.startIndex..<$0 + $1.endIndex
+            })
+            return TensorSlice(base: base, slice: baseSlice)
         }
         set {
-            assignValues(newValue, dimensions: slice)
+            for index in slice  {
+                let baseIndex = zip(self.slice.startIndex, index).map{ $0 + $1 }
+                base[baseIndex] = newValue[index]
+            }
         }
     }
     
     public subscript(slice: RangedDimension...) -> TensorSlice<Element> {
         get {
             assert(slice.count == self.slice.count)
-            let newSlice: RangedIndex = slice.enumerate().map{
-                assert((0 <= $1.startIndex) && ($1.endIndex <= dimensions[$0]))
-                return startIndices[$0] + $1.startIndex..<startIndices[$0] + $1.endIndex
-            }
+            assert(rangedIndexIsValid(RangedIndex(index: slice)))
+            let newSlice = RangedIndex(index: zip(self.slice.startIndex, slice).map{
+                return $0 + $1.startIndex..<$0 + $1.endIndex
+            })
             return TensorSlice(base: base, slice: newSlice)
         }
         set {
-            assignValues(newValue, dimensions: slice)
-        }
-    }
-    
-    private func assignValues(values: TensorSlice<Element>, dimensions: RangedIndex) {
-        if dimensions.count == 1 {
-            for i in dimensions[0] {
-                var baseIndex = startIndices
-                var valueIndex = [Int](count: self.dimensions.count, repeatedValue: 0)
-                baseIndex[baseIndex.count - 1] += i
-                valueIndex[valueIndex.count - 1] = i
-                assert(indexIsValid(valueIndex) && base.indexIsValid(baseIndex))
-                base[baseIndex] = values[valueIndex]
-            }
-        } else {
-            var newDimensions: RangedIndex = self.dimensions.map{ 0..<$0 }
-            for i in dimensions[0] {
-                let index = newDimensions.count - dimensions.count
-                newDimensions[index] = RangedDimension(integerLiteral: i)
-                let newSlice = self[newDimensions]
-                newSlice.assignValues(values[newDimensions], dimensions: RangedIndex(newDimensions[index + 1..<newDimensions.count]))
+            for index in RangedIndex(index: slice)  {
+                let baseIndex = zip(self.slice.startIndex, index).map{ $0 + $1 }
+                base[baseIndex] = newValue[index]
             }
         }
     }
@@ -138,4 +112,27 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         }
         return true
     }
+    
+    public func rangedIndexIsValid(indices: RangedIndex) -> Bool {
+        assert(indices.dimensions.count == dimensions.count)
+        for (i, range) in indices.enumerate() {
+            if range.startIndex < 0 && dimensions[i] <= range.endIndex {
+                return false
+            }
+        }
+        return true
+    }
+}
+
+// MARK: - Equatable
+
+public func ==<T: Equatable>(lhs: TensorSlice<T>, rhs: TensorSlice<T>) -> Bool {
+    assert(lhs.dimensions == rhs.dimensions)
+    let slice = RangedIndex(index: lhs.dimensions.map{ 0..<$0 })
+    for index in slice {
+        if lhs[index] != rhs[index] {
+            return false
+        }
+    }
+    return true
 }

@@ -21,16 +21,18 @@
 import XCTest
 import Upsurge
 
-class RangedDimensionTests: XCTestCase {
+class RangedIndexTests: XCTestCase {
     var rangedDimension: RangedDimension?
     var indexedDimension: RangedDimension?
+    var rangedIndex: RangedIndex?
     
     override func setUp() {
         rangedDimension = 4...7
         indexedDimension = 1
+        rangedIndex = [0...1, 5, 3...4, 2...3, 0]
     }
     
-    func testGenerator() {
+    func testDimensionGenerator() {
         var result = [Int]()
         for i in rangedDimension! {
             result.append(i)
@@ -41,4 +43,22 @@ class RangedDimensionTests: XCTestCase {
         XCTAssertEqual(result, [4, 5, 6, 7, 1])
     }
 
+    func testIndexGenerator() {
+        var result = [[Int]]()
+        for index in rangedIndex! {
+            result.append(index)
+        }
+        let expected: [[Int]] = [
+            [0, 5, 3, 2, 0],
+            [0, 5, 3, 3, 0],
+            [0, 5, 4, 2, 0],
+            [0, 5, 4, 3, 0],
+            [1, 5, 3, 2, 0],
+            [1, 5, 3, 3, 0],
+            [1, 5, 4, 2, 0],
+            [1, 5, 4, 3, 0]
+        ]
+        
+        XCTAssertEqual(result, expected)
+    }
 }
