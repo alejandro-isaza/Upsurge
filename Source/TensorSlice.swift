@@ -26,7 +26,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
     var base: Tensor<Element>
     let dimensions: [Int]
     
-    public var slice: RangedIndex
+    public var slice: Span
 
     public var pointer: UnsafePointer<Element> {
         return base.pointer
@@ -36,7 +36,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         return base.mutablePointer
     }
     
-    public init(base: Tensor<Element>, slice: RangedIndex) {
+    public init(base: Tensor<Element>, slice: Span) {
         assert(slice.dimensions.count == base.dimensions.count)
         self.base = base
         self.slice = slice
@@ -69,12 +69,12 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         }
     }
     
-    public subscript(slice: RangedIndex) -> TensorSlice<Element> {
+    public subscript(slice: Span) -> TensorSlice<Element> {
         get {
             assert(slice.count == self.slice.count)
             assert(rangedIndexIsValid(slice))
-            let baseSlice = RangedIndex(index: zip(slice.startIndex, slice.index).map{
-                return $0 + $1.startIndex..<$0 + $1.endIndex
+            let baseSlice = Span(index: zip(slice.startIndex, slice.index).map{
+                return $0 + $1.start..<$0 + $1.end
             })
             return TensorSlice(base: base, slice: baseSlice)
         }
@@ -86,17 +86,17 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         }
     }
     
-    public subscript(slice: RangedDimension...) -> TensorSlice<Element> {
+    public subscript(slice: IntegerRange...) -> TensorSlice<Element> {
         get {
             assert(slice.count == self.slice.count)
-            assert(rangedIndexIsValid(RangedIndex(index: slice)))
-            let newSlice = RangedIndex(index: zip(self.slice.startIndex, slice).map{
-                return $0 + $1.startIndex..<$0 + $1.endIndex
+            assert(rangedIndexIsValid(Span(index: slice)))
+            let newSlice = Span(index: zip(self.slice.startIndex, slice).map{
+                return $0 + $1.start..<$0 + $1.end
             })
             return TensorSlice(base: base, slice: newSlice)
         }
         set {
-            for index in RangedIndex(index: slice)  {
+            for index in Span(index: slice)  {
                 let baseIndex = zip(self.slice.startIndex, index).map{ $0 + $1 }
                 base[baseIndex] = newValue[index]
             }
@@ -113,7 +113,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         return true
     }
     
-    public func rangedIndexIsValid(indices: RangedIndex) -> Bool {
+    public func rangedIndexIsValid(indices: Span) -> Bool {
         assert(indices.dimensions.count == dimensions.count)
         for (i, range) in indices.enumerate() {
             if range.startIndex < 0 && dimensions[i] <= range.endIndex {
@@ -128,7 +128,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
 
 public func ==<T: Equatable>(lhs: TensorSlice<T>, rhs: TensorSlice<T>) -> Bool {
     assert(lhs.dimensions == rhs.dimensions)
-    let slice = RangedIndex(index: lhs.dimensions.map{ 0..<$0 })
+    let slice = Span(index: lhs.dimensions.map{ 0..<$0 })
     for index in slice {
         if lhs[index] != rhs[index] {
             return false
