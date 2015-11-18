@@ -19,8 +19,6 @@
 // THE SOFTWARE.
 
 
-public let 🅾️ = Interval.All
-
 public enum Interval : IntegerLiteralConvertible {
     case All
     case Range(IntegerRange)
