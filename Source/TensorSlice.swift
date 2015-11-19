@@ -29,7 +29,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         return dimensions.reduce(1, combine: *)
     }
     
-    public var span: Span
+    var span: Span
 
     public var pointer: UnsafePointer<Element> {
         return base.pointer
@@ -39,7 +39,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         return base.mutablePointer
     }
     
-    public init(base: Tensor<Element>, span: Span) {
+    init(base: Tensor<Element>, span: Span) {
         assert(span.dimensions.count == base.dimensions.count)
         self.base = base
         self.span = span
@@ -73,7 +73,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
     public subscript(slice: [Interval]) -> TensorSlice<Element> {
         get {
             let span = Span(dimensions: dimensions, elements: slice)
-            assert(rangedIndexIsValid(span))
+            assert(spanIsValid(span))
             let baseSlice = Span(base: self.span.startIndex, subSpan: span)
             return TensorSlice(base: base, span: baseSlice)
         }
@@ -96,10 +96,10 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         }
     }
     
-    public subscript(span: Span) -> TensorSlice<Element> {
+    subscript(span: Span) -> TensorSlice<Element> {
         get {
             assert(span.count == self.span.count)
-            assert(rangedIndexIsValid(span))
+            assert(spanIsValid(span))
             let baseSlice = Span(base: self.span.startIndex, subSpan: span)
             return TensorSlice(base: base, span: baseSlice)
         }
@@ -122,7 +122,7 @@ public struct TensorSlice<ElementType where ElementType: CustomStringConvertible
         return true
     }
     
-    public func rangedIndexIsValid(indices: Span) -> Bool {
+    func spanIsValid(indices: Span) -> Bool {
         assert(indices.dimensions.count == dimensions.count)
         for (i, range) in indices.enumerate() {
             if range.startIndex < 0 && dimensions[i] <= range.endIndex {

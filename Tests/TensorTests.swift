@@ -22,80 +22,27 @@ import XCTest
 import Upsurge
 
 class TensorTests: XCTestCase {
-    var threeDimensional5IdentityTensor: Tensor<Real>!
-    var fourDimensional2IndentityTensor: Tensor<Real>!
+    var diagonalTensor3D: Tensor<Real>!
+    var diagonalTensor4D: Tensor<Real>!
     
     override func setUp() {
         super.setUp()
-        /*
-        matrix 0:
-        ⎛1, 0, 0, 0, 0⎞
-        ⎜0, 0, 0, 0, 0⎟
-        ⎜0, 0, 0, 0, 0⎟
-        ⎜0, 0, 0, 0, 0⎟
-        ⎝0, 0, 0, 0, 0⎠
-        matrix 1:
-        ⎛0, 0, 0, 0, 0⎞
-        ⎜0, 1, 0, 0, 0⎟
-        ⎜0, 0, 0, 0, 0⎟
-        ⎜0, 0, 0, 0, 0⎟
-        ⎝0, 0, 0, 0, 0⎠
-        matrix 2:
-        ⎛0, 0, 0, 0, 0⎞
-        ⎜0, 0, 0, 0, 0⎟
-        ⎜0, 0, 1, 0, 0⎟
-        ⎜0, 0, 0, 0, 0⎟
-        ⎝0, 0, 0, 0, 0⎠
-        matrix 3:
-        ⎛0, 0, 0, 0, 0⎞
-        ⎜0, 0, 0, 0, 0⎟
-        ⎜0, 0, 0, 0, 0⎟
-        ⎜0, 0, 0, 1, 0⎟
-        ⎝0, 0, 0, 0, 0⎠
-        matrix 4:
-        ⎛0, 0, 0, 0, 0⎞
-        ⎜0, 0, 0, 0, 0⎟
-        ⎜0, 0, 0, 0, 0⎟
-        ⎜0, 0, 0, 0, 0⎟
-        ⎝0, 0, 0, 0, 1⎠
-        */
-        threeDimensional5IdentityTensor = Tensor(dimensions: [5, 5, 5], repeatedValue: 0)
-        threeDimensional5IdentityTensor[0, 0, 0] = 1
-        threeDimensional5IdentityTensor[1, 1, 1] = 1
-        threeDimensional5IdentityTensor[2, 2, 2] = 1
-        threeDimensional5IdentityTensor[3, 3, 3] = 1
-        threeDimensional5IdentityTensor[4, 4, 4] = 1
+        diagonalTensor3D = Tensor(dimensions: [5, 5, 5], repeatedValue: 0)
+        diagonalTensor3D[0, 0, 0] = 1
+        diagonalTensor3D[1, 1, 1] = 1
+        diagonalTensor3D[2, 2, 2] = 1
+        diagonalTensor3D[3, 3, 3] = 1
+        diagonalTensor3D[4, 4, 4] = 1
 
-        /*
-        Cube 1:
-        in front:
-        ⎛1, 0⎞
-        ⎝0, 0⎠
-        behind:
-        ⎛0, 0⎞
-        ⎝0, 0⎠
-        
-        Cube 2:
-        in front:
-        ⎛0, 0⎞
-        ⎝0, 0⎠
-        behind:
-        ⎛0, 0⎞
-        ⎝0, 1⎠
-        */
-        fourDimensional2IndentityTensor = Tensor(dimensions: [2, 2, 2, 2], repeatedValue: 0)
-        fourDimensional2IndentityTensor[0, 0, 0, 0] = 1
-        fourDimensional2IndentityTensor[1, 1, 1, 1] = 1
+        diagonalTensor4D = Tensor(dimensions: [2, 2, 2, 2], repeatedValue: 0)
+        diagonalTensor4D[0, 0, 0, 0] = 1
+        diagonalTensor4D[1, 1, 1, 1] = 1
     }
     
     func testSliceAndSubscript() {
-        let spanIndex: Span = [3, 2...3, 2...3]
-        let slice1 = threeDimensional5IdentityTensor[spanIndex]
-        
-        let intervalIndex: [Interval] = [1, 1, .All, .All]
-        let slice2 = fourDimensional2IndentityTensor[intervalIndex]
-        
-        let slice3 = fourDimensional2IndentityTensor.extractMatrix(1, 1, 0...1, 0...1)
+        let slice1 = diagonalTensor3D[3, 2...3, 2...3]
+        let slice2 = diagonalTensor4D[1, 1, .All, .All]
+        let slice3 = diagonalTensor4D.extractMatrix(1, 1, 0...1, 0...1)
 
         XCTAssertEqual(slice1, slice2)
         XCTAssert(slice1 == slice3)
@@ -104,33 +51,27 @@ class TensorTests: XCTestCase {
     }
     
     func testSliceAndValueAssignment() {
-        threeDimensional5IdentityTensor[0, 1, 1] = 16
-        let expected = Tensor<Real>(dimensions: [5, 5, 5], repeatedValue: 0)
-        expected[0, 0, 0] = 1
-        expected[1, 1, 1] = 1
-        expected[2, 2, 2] = 1
-        expected[3, 3, 3] = 1
-        expected[4, 4, 4] = 1
-        expected[0, 1, 1] = 16
-        XCTAssertEqual(threeDimensional5IdentityTensor, expected)
-        XCTAssertEqual(expected[0, 1, 1], 16)
-        XCTAssertEqual(expected[0, 0, 1], 0)
+        XCTAssertEqual(diagonalTensor3D[0, 1, 1], 0)
+
+        diagonalTensor3D[0, 1, 1] = 16
+        XCTAssertEqual(diagonalTensor3D[0, 1, 1], 16)
     }
     
     func testSliceValueAssignment() {
-        let fourDimensionalTensor = Tensor(dimensions: [2, 2, 2, 2], elements: [6.4, 2.4, 8.6, 0.2, 6.4, 1.5, 7.3, 1.1, 6.0, 1.4, 7.8, 9.2, 4.2, 6.1, 8.7, 3.6])
-        fourDimensional2IndentityTensor[1, .All, 0...1, 0...1] = fourDimensionalTensor[0, 0...1, .All, 0...1]
+        let tensor = Tensor(dimensions: [2, 2, 2, 2], elements: [6.4, 2.4, 8.6, 0.2, 6.4, 1.5, 7.3, 1.1, 6.0, 1.4, 7.8, 9.2, 4.2, 6.1, 8.7, 3.6])
+        diagonalTensor4D[1, .All, 0...1, 0...1] = tensor[0, 0...1, .All, 0...1]
+
         let expected = Tensor(dimensions: [2, 2, 2, 2], elements: [1, 0, 0, 0, 0, 0, 0, 0, 6.4, 2.4, 8.6, 0.2, 6.4, 1.5, 7.3, 1.1])
-        XCTAssertEqual(fourDimensional2IndentityTensor, expected)
+        XCTAssertEqual(diagonalTensor4D, expected)
     }
     
     func testMatrixExtraction() {
-        var m = fourDimensional2IndentityTensor.extractMatrix(1, 1, 0...1, 0...1)
+        var matrix = diagonalTensor4D.extractMatrix(1, 1, 0...1, 0...1)
         var expected = RealMatrix([[0, 0], [0, 1]])
-        XCTAssertEqual(m, expected)
+        XCTAssertEqual(matrix, expected)
         
-        m = fourDimensional2IndentityTensor.extractMatrix(0, 0, 0, 0)
+        matrix = diagonalTensor4D.extractMatrix(0, 0, 0, 0)
         expected = RealMatrix([[1]])
-        XCTAssertEqual(m, expected)
+        XCTAssertEqual(matrix, expected)
     }
 }

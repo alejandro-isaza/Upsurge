@@ -20,14 +20,16 @@
 
 import Accelerate
 
-
+/// A `Tensor` is a multi-dimensional collection of values.
 public class Tensor<ElementType where ElementType: CustomStringConvertible, ElementType: Equatable> : Equatable {
     public typealias Index = [Int]
     public typealias Element = ElementType
 
     public var dimensions: [Int]
     public var elements: ValueArray<Element>
-    public var count: Int { return dimensions.reduce(1, combine: *) }
+    public var count: Int {
+        return dimensions.reduce(1, combine: *)
+    }
 
     public var pointer: UnsafePointer<Element> {
         return elements.pointer
@@ -43,7 +45,12 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
         self.elements = ValueArray(elements)
     }
 
-    public init(matrix: Matrix<ElementType>) {
+    public init(_ tensor: Tensor<Element>) {
+        self.dimensions = tensor.dimensions
+        self.elements = ValueArray<Element>(tensor.elements)
+    }
+
+    public init(_ matrix: Matrix<ElementType>) {
         self.dimensions = [matrix.rows, matrix.columns]
         self.elements = matrix.elements
     }
@@ -73,12 +80,12 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
             let indexReplacementRage: Range<Int> = dimensions.count - indices.count..<dimensions.count
             index.replaceRange(indexReplacementRage, with: zip(index[indexReplacementRage], indices).map{ $0 + $1 })
             assert(indexIsValid(index))
-            let elementsIndex = constructIndex(index)
+            let elementsIndex = linearIndex(index)
             return elements[elementsIndex]
         }
         set {
             assert(indexIsValid(indices))
-            let index = constructIndex(indices)
+            let index = linearIndex(indices)
             elements[index] = newValue
         }
     }
@@ -103,7 +110,7 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
         }
     }
 
-    public subscript(span: Span) -> TensorSlice<Element> {
+    subscript(span: Span) -> TensorSlice<Element> {
         get {
             assert(spanIsValid(span))
             return TensorSlice(base: self, span: span)
@@ -117,37 +124,37 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
         }
     }
 
-    /**
-     Extract a matrix from the tensor.
-
-     - Precondition: All but the last two elements of the span must be an specific index, not a range. If the second-last element is a range, the last element must span the full dimension.
-     */
-    public func extractMatrix(span: Span) -> Matrix<Element> {
+    func extractMatrix(span: Span) -> Matrix<Element> {
         assert(spanIsValid(span))
-        span.span[0..<span.dimensions.count - 2].forEach{ assert($0.count == 1) }
+        span.ranges[0..<span.dimensions.count - 2].forEach{ assert($0.count == 1) }
         if span[span.dimensions.count - 2].count != 1 {
-            assert(span.span.last!.count == dimensions.last!)
+            assert(span.ranges.last!.count == dimensions.last!)
         }
 
         let rows = span[span.dimensions.count - 2].count
         let columns = span[span.dimensions.count - 1].count
 
-        let pointerOffset = constructIndex(span.startIndex)
+        let pointerOffset = linearIndex(span.startIndex)
         let count = span.count
 
         return Matrix(rows: rows, columns: columns, elements: elements[pointerOffset..<pointerOffset + count])
     }
 
-    public func extractMatrix(slice: IntegerRange...) -> Matrix<Element> {
-        return extractMatrix(Span(span: slice))
+    /**
+     Extract a matrix from the tensor.
+
+     - Precondition: All but the last two intervals must be a specific index, not a range. If the second-last element is a range, the last element must span the full dimension.
+     */
+    public func extractMatrix(intervals: Interval...) -> Matrix<Element> {
+        let span = Span(dimensions: dimensions, elements: intervals)
+        return extractMatrix(span)
     }
 
     public func copy() -> Tensor {
-        let copy = elements.copy()
-        return Tensor(dimensions: dimensions, elements: copy)
+        return Tensor(self)
     }
 
-    private func constructIndex(indices: Index) -> Int {
+    private func linearIndex(indices: Index) -> Int {
         assert(indexIsValid(indices))
         var index = indices[0]
         for (i, dim) in dimensions[1..<dimensions.count].enumerate() {
@@ -166,7 +173,7 @@ public class Tensor<ElementType where ElementType: CustomStringConvertible, Elem
         return true
     }
 
-    public func spanIsValid(span: Span) -> Bool {
+    func spanIsValid(span: Span) -> Bool {
         assert(span.dimensions.count == dimensions.count)
         for (i, range) in span.enumerate() {
             if range.startIndex < 0 && dimensions[i] <= range.endIndex {
