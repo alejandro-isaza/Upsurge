@@ -47,10 +47,19 @@ class AuxiliaryTests: XCTestCase {
     }
 
     func testThreshold() {
-      let signs = RealArray((0..<n).map {$0 % 2 == 0 ? 1.0 : -1.0})
+        let signs = RealArray((0..<n).map {$0 % 2 == 0 ? 1.0 : -1.0})
+        let clip = threshold(signs, low: 0.0)
 
-      let clip = threshold(signs, low: 0.0)
-
-      XCTAssertEqual(min(clip), 0.0)
+        XCTAssertEqual(min(clip), 0.0)
     }
+
+    func testRound() {
+        let increment = Array(0..<20).map { Double($0) * 0.2 }
+        print(increment)
+        let rounded = round(increment)
+
+        let samples = [rounded[3], rounded[8], rounded[13]]
+        XCTAssertEqual(samples, Array(1...3))
+    }
+
 }
