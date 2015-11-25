@@ -54,11 +54,12 @@ class AuxiliaryTests: XCTestCase {
     }
 
     func testRound() {
-        let increment = (0..<20).map { Double($0) * 0.2 }
+        let n = 100
+        let increment = (0..<n).map { Double($0) * 0.2 }
         let rounded = round(increment)
 
-        let samples = [rounded[3], rounded[8], rounded[13]]
-        XCTAssertEqual(samples, Array(1...3))
+        let expected = RealArray(increment.map { round($0) })
+        XCTAssertEqual(rounded, expected)
     }
 
 }
