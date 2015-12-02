@@ -1,23 +1,19 @@
+VPATH = Array Complex DSP Matrix Operations Tensor Types
 SDK=$$(xcrun --show-sdk-path --sdk macosx)
-SWIFT=/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc
-OBJS=ValueArray.o ValueArraySlice.o Matrix.o MatrixArithmetic.o Tensor.o TensorSlice.o Span.o Arithmetic.o Auxiliary.o Exponential.o ContiguousMemory.o Interval.o Real.o Value.o
-SRC=./Array/ValueArray.swift ./Array/ValueArraySlice.swift ./Matrix/Matrix.swift ./Matrix/MatrixArithmetic.swift ./Tensor/Tensor.swift ./Tensor/TensorSlice.swift ./Tensor/Span.swift ./Operations/Arithmetic.swift ./Operations/Auxiliary.swift ./Operations/Exponential.swift ./Types/ContiguousMemory.swift ./Types/Interval.swift ./Types/Real.swift ./Types/Value.swift 
-VPATH = Array
+SRC=ValueArray.swift ValueArraySlice.swift DSP.swift Matrix.swift MatrixArithmetic.swift Tensor.swift TensorSlice.swift Span.swift Arithmetic.swift Auxiliary.swift Exponential.swift Hyperbolic.swift Trigonometric.swift ContiguousMemory.swift Interval.swift Real.swift Value.swift 
+OBJS:=$(subst .swift,.o,$(SRC))
 
 .PHONY: all
-all: lib module
+all: libUpsurge.a Upsurge.swiftmodule
 
-lib: $(OBJS)
-	libtool -static -s -o libUpsurge.a -no_warning_for_no_symbols $(OBJS)
+libUpsurge.a: $(OBJS)
+	libtool -static -s -o $@ -no_warning_for_no_symbols $^
 
-module:
-	xcrun swiftc -emit-module $(SRC) -sdk $(SDK) -module-name Upsurge
+Upsurge.swiftmodule: $(SRC)
+	xcrun swiftc -emit-module $^ -sdk $(SDK) -module-name Upsurge
 
 $(OBJS): $(SRC)
-	xcrun swiftc -emit-library -emit-object $(SRC) -sdk $(SDK) -module-name Upsurge
-
-#ValueArray.o: ValueArray.swift
-#	$(SWIFT) -c -primary-file $< $(SRC) -sdk $(SDK) -module-name Upsurge -o $@
+	xcrun swiftc -emit-library -emit-object $^ -sdk $(SDK) -module-name Upsurge
 
 .PHONY: clean
 clean:
