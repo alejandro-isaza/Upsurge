@@ -1,6 +1,6 @@
 VPATH = Array Complex DSP Matrix Operations Tensor Types
 SDK=$$(xcrun --show-sdk-path --sdk macosx)
-SRC=ValueArray.swift ValueArraySlice.swift DSP.swift Matrix.swift MatrixArithmetic.swift Tensor.swift TensorSlice.swift Span.swift Arithmetic.swift Auxiliary.swift Exponential.swift Hyperbolic.swift Trigonometric.swift ContiguousMemory.swift Interval.swift Real.swift Value.swift 
+SRC=ValueArray.swift ValueArraySlice.swift Matrix.swift MatrixArithmetic.swift Tensor.swift TensorSlice.swift Span.swift Arithmetic.swift Auxiliary.swift Exponential.swift Hyperbolic.swift Trigonometric.swift ContiguousMemory.swift Interval.swift Real.swift Value.swift Complex.swift ComplexArithmetic.swift ComplexArray.swift ComplexArrayRealSlice.swift DSP.swift FFT.swift
 OBJS:=$(subst .swift,.o,$(SRC))
 
 .PHONY: all
