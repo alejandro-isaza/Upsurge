@@ -22,7 +22,7 @@
 public struct ValueArraySlice<Element: Value> : ContiguousMutableMemory, MutableIndexable, CustomStringConvertible, Equatable {
     public typealias Index = Int
 
-    var base: ValueArray<Element>
+    public var base: ValueArray<Element>
     public var startIndex: Int
     public var endIndex: Int
     public var step: Int
