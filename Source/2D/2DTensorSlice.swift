@@ -38,7 +38,7 @@ public class TwoDimensionalTensorSlice<T: Value>: MutableQuadraticType, Equatabl
     public var stride: Int
     
     var base: Tensor<Element>
-    var span: Span
+    public var span: Span
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeBufferPointer(body)

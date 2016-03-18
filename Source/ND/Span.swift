@@ -20,8 +20,8 @@
 
 
 /// Span is a collection of Ranges to specify a multi-dimensional slice of a Tensor.
-struct Span: ArrayLiteralConvertible, SequenceType {
-    typealias Element = Range<Int>
+public struct Span: ArrayLiteralConvertible, SequenceType {
+    public typealias Element = Range<Int>
     
     var ranges: [Element]
 
@@ -45,7 +45,7 @@ struct Span: ArrayLiteralConvertible, SequenceType {
         self.ranges = ranges
     }
     
-    init(arrayLiteral elements: Element...) {
+    public init(arrayLiteral elements: Element...) {
         self.init(ranges: elements)
     }
     
@@ -66,7 +66,7 @@ struct Span: ArrayLiteralConvertible, SequenceType {
         for i in 0..<intervals.count {
             let start = intervals[i].start ?? 0
             let end = intervals[i].end ?? dimensions[i]
-            assert(0 <= start && end < dimensions[i])
+            assert(0 <= start && end <= dimensions[i])
             ranges.append(start..<end)
         }
         self.init(ranges: ranges)
@@ -86,7 +86,7 @@ struct Span: ArrayLiteralConvertible, SequenceType {
         self.init(start: start, end: end)
     }
     
-    func generate() -> SpanGenerator {
+    public func generate() -> SpanGenerator {
         return SpanGenerator(span: self)
     }
     
@@ -116,7 +116,7 @@ struct Span: ArrayLiteralConvertible, SequenceType {
     }
 }
 
-class SpanGenerator: GeneratorType {
+public class SpanGenerator: GeneratorType {
     private var span: Span
     private var presentIndex: [Int]
     private var kill = false
@@ -126,7 +126,7 @@ class SpanGenerator: GeneratorType {
         self.presentIndex = span.startIndex.map{ $0 }
     }
     
-    func next() -> [Int]? {
+    public func next() -> [Int]? {
         return incrementIndex(presentIndex.count - 1)
     }
     
@@ -151,7 +151,7 @@ class SpanGenerator: GeneratorType {
 // MARK: - Dimensional Congruency
 
 infix operator ≅ { precedence 130 }
-func ≅(lhs: Span, rhs: Span) -> Bool {
+public func ≅(lhs: Span, rhs: Span) -> Bool {
     if lhs.dimensions == rhs.dimensions {
         return true
     }

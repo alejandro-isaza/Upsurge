@@ -30,7 +30,7 @@ public class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertibl
     public var columns: Int
     
     public var base: Matrix<Element>
-    var span: Span
+    public var span: Span
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         let index = linearIndex(span.startIndex)

@@ -28,6 +28,10 @@ public class ComplexArraySlice<T: Real>: MutableLinearType  {
     public var startIndex: Index
     public var endIndex: Index
     public var step: Index
+    
+    public var span: Span {
+        return Span(ranges: [startIndex..<endIndex])
+    }
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeBufferPointer(body)

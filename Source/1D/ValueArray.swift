@@ -38,6 +38,10 @@ public class ValueArray<Element: Value>: MutableLinearType, ArrayLiteralConverti
     public var step: Index {
         return 1
     }
+    
+    public var span: Span {
+        return Span(zeroTo: [endIndex])
+    }
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try body(UnsafeBufferPointer(start: mutablePointer, count: count))

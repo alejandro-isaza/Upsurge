@@ -28,6 +28,9 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
     public var startIndex: Int
     public var endIndex: Int
     public var step: Int
+    public var span: Span {
+        return Span(ranges: [startIndex..<endIndex])
+    }
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeBufferPointer { pointer in

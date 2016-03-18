@@ -24,6 +24,7 @@ public protocol TensorType {
     
     /// The count of each dimension
     var dimensions: [Int] { get }
+    var span: Span { get }
     
     subscript(intervals: [IntervalType]) -> Slice { get }
     subscript(intervals: [Int]) -> Element { get }
@@ -33,12 +34,6 @@ public protocol TensorType {
 
     /// Call `body(pointer)` with the pointer to the beginning of the memory block
     func withUnsafePointer<R>(@noescape body: (UnsafePointer<Element>) throws -> R) rethrows -> R
-}
-
-internal extension TensorType {
-    var span: Span {
-        return Span(zeroTo: dimensions)
-    }
 }
 
 public extension TensorType {

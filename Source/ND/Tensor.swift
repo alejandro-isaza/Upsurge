@@ -44,7 +44,7 @@ public class Tensor<Element: Value>: MutableTensorType, Equatable {
         return try elements.withUnsafeMutablePointer(body)
     }
     
-    var span: Span {
+    public var span: Span {
         return Span(zeroTo: dimensions)
     }
 

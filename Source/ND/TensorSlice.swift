@@ -29,7 +29,7 @@ public class TensorSlice<Element: Value>: MutableTensorType, Equatable {
         return dimensions.reduce(1, combine: *)
     }
     
-    var span: Span
+    public let span: Span
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeBufferPointer(body)

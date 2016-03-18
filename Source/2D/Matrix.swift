@@ -29,7 +29,7 @@ public class Matrix<T: Value>: MutableQuadraticType, Equatable, CustomStringConv
     public var columns: Int
     public var elements: ValueArray<Element>
     
-    var span: Span {
+    public var span: Span {
         return Span(zeroTo: dimensions)
     }
 
