@@ -36,7 +36,11 @@ public struct Span: ArrayLiteralConvertible, SequenceType {
     var count: Int {
         return dimensions.reduce(1, combine: *)
     }
-
+    
+    var rank: Int {
+        return ranges.count
+    }
+    
     var dimensions: [Int] {
         return ranges.map{ $0.count }
     }

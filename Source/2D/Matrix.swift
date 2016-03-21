@@ -30,7 +30,7 @@ public class Matrix<T: Value>: MutableQuadraticType, Equatable, CustomStringConv
     public var elements: ValueArray<Element>
     
     public var span: Span {
-        return Span(zeroTo: dimensions)
+        return Span(zeroTo: [rows, columns])
     }
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {

@@ -24,12 +24,8 @@ public class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     public typealias Slice = TensorSlice<Element>
     
     var base: Tensor<Element>
-    public let dimensions: [Int]
-    public var count: Int {
-        return dimensions.reduce(1, combine: *)
-    }
-    
-    public let span: Span
+
+    public var span: Span
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeBufferPointer(body)
@@ -48,10 +44,9 @@ public class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     }
     
     init(base: Tensor<Element>, span: Span) {
-        assert(span.dimensions.count == base.dimensions.count)
+        assert(span.rank == base.rank)
         self.base = base
         self.span = span
-        self.dimensions = span.dimensions
     }
     
     public subscript(indices: Int...) -> Element {

@@ -22,8 +22,7 @@ public protocol TensorType {
     typealias Element
     typealias Slice
     
-    /// The count of each dimension
-    var dimensions: [Int] { get }
+    /// A description of the dimensions over which the TensorType spans
     var span: Span { get }
     
     subscript(intervals: [IntervalType]) -> Slice { get }
@@ -37,27 +36,37 @@ public protocol TensorType {
 }
 
 public extension TensorType {
+    /// The size of each dimension
+    public var dimensions: [Int] {
+        return span.dimensions
+    }
+    
     /// The number of valid element in the memory block, taking into account the step size.
     public var count: Int {
-        return dimensions.reduce(1, combine: *)
+        return span.count
     }
     
     /// The number of dimensions
     public var rank: Int {
-        return dimensions.count
+        return span.rank
     }
     
+    /// Convert a high-dimensional index into an integer index for a LinearType
     public func linearIndex(indices: [Int]) -> Int {
-        assert(indexIsValid(indices))
+        precondition(indexIsValid(indices))
         var index = indices[0]
-        for (i, dim) in dimensions[1..<dimensions.count].enumerate() {
+        for (i, dim) in span.dimensions[1..<rank].enumerate() {
             index = (dim * index) + indices[i+1]
         }
         return index
     }
     
+    /// Check that an index falls within the span
     public func indexIsValid(indices: [Int]) -> Bool {
-        assert(indices.count == dimensions.count)
+        if indices.count != rank {
+            return false
+        }
+        
         for (i, index) in indices.enumerate() {
             if index < span[i].startIndex || span[i].endIndex <= index {
                 return false

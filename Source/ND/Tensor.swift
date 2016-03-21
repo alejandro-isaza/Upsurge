@@ -25,7 +25,6 @@ public class Tensor<Element: Value>: MutableTensorType, Equatable {
     public typealias Index = [Int]
     public typealias Slice = TensorSlice<Element>
 
-    public var dimensions: [Int]
     public var elements: ValueArray<Element>
 
     public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
@@ -44,18 +43,16 @@ public class Tensor<Element: Value>: MutableTensorType, Equatable {
         return try elements.withUnsafeMutablePointer(body)
     }
     
-    public var span: Span {
-        return Span(zeroTo: dimensions)
-    }
+    public var span: Span
 
     public init<M: LinearType where M.Element == Element>(dimensions: [Int], elements: M) {
         assert(dimensions.reduce(1, combine: *) == elements.count)
-        self.dimensions = dimensions
+        self.span = Span(zeroTo: dimensions)
         self.elements = ValueArray(elements)
     }
 
     public init(_ tensor: Tensor<Element>) {
-        self.dimensions = tensor.dimensions
+        self.span = tensor.span
         self.elements = ValueArray<Element>(tensor.elements)
     }
     
@@ -67,22 +64,22 @@ public class Tensor<Element: Value>: MutableTensorType, Equatable {
     }
 
     public init(_ matrix: Matrix<Element>) {
-        self.dimensions = [matrix.rows, matrix.columns]
-        self.elements = matrix.elements
+        self.span = matrix.span
+        self.elements = ValueArray<Element>(matrix.elements)
     }
 
     public init(dimensions: [Int]) {
-        self.dimensions = dimensions
+        self.span = Span(zeroTo: dimensions)
         self.elements = ValueArray(count: dimensions.reduce(1, combine: *))
     }
 
     public init(dimensions: [Int], repeatedValue: Element) {
-        self.dimensions = dimensions
+        self.span = Span(zeroTo: dimensions)
         self.elements = ValueArray(count: dimensions.reduce(1, combine: *), repeatedValue: repeatedValue)
     }
 
     public init(dimensions: [Int], initializer: () -> Element) {
-        self.dimensions = dimensions
+        self.span = Span(zeroTo: dimensions)
         self.elements = ValueArray(count: dimensions.reduce(1, combine: *), initializer: initializer)
     }
     
@@ -147,9 +144,9 @@ public class Tensor<Element: Value>: MutableTensorType, Equatable {
         }
     }
     
-    public func reshape(dimensions: Int...) {
-        precondition(dimensions.reduce(1, combine: *) == count)
-        self.dimensions = dimensions
+    public func reshape(span: Span) {
+        precondition(span.count == self.span.count)
+        self.span = span
     }
 
     public func copy() -> Tensor {
@@ -185,7 +182,7 @@ extension Tensor {
 // MARK: -
 
 public func swap<T>(lhs: Tensor<T>, rhs: Tensor<T>) {
-    swap(&lhs.dimensions, &rhs.dimensions)
+    swap(&lhs.span, &rhs.span)
     swap(&lhs.elements, &rhs.elements)
 }
 

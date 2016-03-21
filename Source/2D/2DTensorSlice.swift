@@ -28,11 +28,6 @@ public class TwoDimensionalTensorSlice<T: Value>: MutableQuadraticType, Equatabl
         return .RowMajor
     }
     
-    public let dimensions: [Int]
-    public var count: Int {
-        return dimensions.reduce(1, combine: *)
-    }
-    
     public let rows: Int
     public let columns: Int
     public var stride: Int
@@ -64,7 +59,6 @@ public class TwoDimensionalTensorSlice<T: Value>: MutableQuadraticType, Equatabl
         assert(span.dimensions.count == base.dimensions.count)
         self.base = base
         self.span = span
-        self.dimensions = span.dimensions
         
         assert(base.spanIsValid(span))
         assert(span.dimensions.reduce(0){ $0.1 > 1 ? $0.0 + 1 : $0.0 } <= 2)
