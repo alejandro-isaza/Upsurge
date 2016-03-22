@@ -157,7 +157,7 @@ public class TwoDimensionalTensorSlice<T: Value>: MutableQuadraticType, Equatabl
     }
     
     public func indexIsValid(indices: [Int]) -> Bool {
-        assert(indices.count == dimensions.count)
+        assert(indices.count == rank)
         for (i, index) in indices.enumerate() {
             if index < span[i].startIndex || span[i].endIndex <= index {
                 return false
