@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 public protocol TensorType {
-    typealias Element
-    typealias Slice
+    associatedtype Element
+    associatedtype Slice
     
     /// A description of the dimensions over which the TensorType spans
     var span: Span { get }

@@ -20,7 +20,7 @@
 
 /// The `LinearType` protocol should be implemented by any collection that stores its values in a contiguous memory block. This is the building block for one-dimensional operations that are single-instruction, multiple-data (SIMD).
 public protocol LinearType: CollectionType, TensorType {
-    typealias Element
+    associatedtype Element
 
     /// The index of the first valid element
     var startIndex: Int { get }

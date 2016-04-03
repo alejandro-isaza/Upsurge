@@ -46,7 +46,8 @@ public func +=<ML: MutableLinearType where ML.Element == Double>(inout lhs: ML, 
     }
 }
 
-public func +<ML: LinearType where ML.Element == Double>(lhs: ML, var rhs: Double) -> ValueArray<Double> {
+public func +<ML: LinearType where ML.Element == Double>(lhs: ML, rhs: Double) -> ValueArray<Double> {
+    var rhs = rhs
     let results = ValueArray<Double>(count: lhs.count)
     withPointer(lhs) { lhsp in
         vDSP_vsaddD(lhsp + lhs.startIndex, lhs.step, &rhs, results.mutablePointer + results.startIndex, results.step, vDSP_Length(lhs.count))
@@ -132,7 +133,8 @@ public func /<ML: LinearType where ML.Element == Double>(lhs: ML, rhs: Double) -
     return results
 }
 
-public func /<ML: LinearType where ML.Element == Double>(var lhs: Double, rhs: ML) -> ValueArray<Double> {
+public func /<ML: LinearType where ML.Element == Double>(lhs: Double, rhs: ML) -> ValueArray<Double> {
+    var lhs = lhs
     let results = ValueArray<Double>(count: rhs.count)
     withPointer(rhs) { rhsp in
         vDSP_svdivD(&lhs, rhsp + rhs.startIndex, rhs.step, results.mutablePointer + results.startIndex, results.step, vDSP_Length(rhs.count))
@@ -154,13 +156,15 @@ public func *<ML: LinearType, MR: LinearType where ML.Element == Double, MR.Elem
     return results
 }
 
-public func *=<ML: MutableLinearType where ML.Element == Double>(inout lhs: ML, var rhs: Double) {
+public func *=<ML: MutableLinearType where ML.Element == Double>(inout lhs: ML, rhs: Double) {
+    var rhs = rhs
     withPointer(&lhs) { lhsp in
         vDSP_vsmulD(lhsp + lhs.startIndex, lhs.step, &rhs, lhsp + lhs.startIndex, lhs.step, vDSP_Length(lhs.count))
     }
 }
 
-public func *<ML: LinearType where ML.Element == Double>(lhs: ML, var rhs: Double) -> ValueArray<Double> {
+public func *<ML: LinearType where ML.Element == Double>(lhs: ML, rhs: Double) -> ValueArray<Double> {
+    var rhs = rhs
     let results = ValueArray<Double>(count: lhs.count)
     withPointer(lhs) { lhsp in
         vDSP_vsmulD(lhsp + lhs.startIndex, lhs.step, &rhs, results.mutablePointer + results.startIndex, results.step, vDSP_Length(lhs.count))
