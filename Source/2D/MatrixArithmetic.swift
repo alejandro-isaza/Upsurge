@@ -67,6 +67,27 @@ public func inv<M: QuadraticType where M.Element == Double>(x: M) -> Matrix<Doub
     return results
 }
 
+public func normalize<M: QuadraticType where M.Element == Double>(x: M) -> Matrix<Double>  {
+    
+    let inputMatrix = Matrix<Double>(x)
+    var individualVectors:[[Double]] = []
+    
+    for i in (0..<inputMatrix .columns) {
+        let length = Int32(inputMatrix .column(i).count)
+        let vector = ValueArray(inputMatrix.column(i)).map {Float($0)}
+        
+        // Calculate l2-norm
+        let two_norm = cblas_snrm2(length, vector, Int32(1))
+        let normalizedVector = Array<Double>(inputMatrix.column(i)/Double(two_norm))
+        individualVectors.append(normalizedVector)
+    }
+    
+    // Create a new matrix that will hold the normalized individual columns
+    let results = Matrix<Double>(individualVectors)
+    
+    return results
+}
+
 public func transpose<M: QuadraticType where M.Element == Double>(x: M) -> Matrix<Double> {
     var results = Matrix<Double>(rows: x.columns, columns: x.rows, repeatedValue: 0.0)
     withPointers(x, &results) { xp, rp in
@@ -187,6 +208,28 @@ public func inv<M: QuadraticType where M.Element == Float>(x: M) -> Matrix<Float
 
     assert(error == 0, "Matrix not invertible")
 
+    return results
+}
+
+public func normalize<M: QuadraticType where M.Element == Float>(x: M) -> Matrix<Float>  {
+    
+    let inputMatrix = Matrix<Float>(x)
+    var individualVectors:[[Float]] = []
+    
+    for i in (0..<inputMatrix .columns) {
+        let length = Int32(inputMatrix .column(i).count)
+        let vector = ValueArray(inputMatrix.column(i))
+        
+        
+        // Calculate l2-norm
+        let two_norm = cblas_snrm2(length, vector.pointer, Int32(1))
+        let normalizedVector = Array<Float>(inputMatrix.column(i)/two_norm)
+        individualVectors.append(normalizedVector)
+    }
+    
+    // Create a new matrix that will hold the normalized individual columns
+    let results = Matrix<Float>(individualVectors)
+    
     return results
 }
 

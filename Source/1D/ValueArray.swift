@@ -92,7 +92,7 @@ public class ValueArray<Element: Value>: MutableLinearType, ArrayLiteralConverti
         count = values.count
         values.withUnsafeBufferPointer { pointer in
             for i in 0..<count {
-                mutablePointer[i] = pointer[values.startIndex + i * step]
+                mutablePointer[i] = pointer[values.startIndex + i * values.step]
             }
         }
     }
