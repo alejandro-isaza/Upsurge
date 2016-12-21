@@ -22,8 +22,9 @@
 public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringConvertible, Equatable {
     public typealias Index = Int
     public typealias Slice = ValueArraySlice<Element>
+    public typealias Base = ValueArray<Element>
 
-    var base: ValueArray<Element>
+    var base: Base
     public var startIndex: Int
     public var endIndex: Int
     public var step: Int
@@ -48,7 +49,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
         return try base.withUnsafeMutablePointer(body)
     }
 
-    public init(base: ValueArray<Element>, startIndex: Int, endIndex: Int, step: Int) {
+    public init(base: Base, startIndex: Int, endIndex: Int, step: Int) {
         assert(base.startIndex <= startIndex && endIndex <= base.endIndex)
         self.base = base
         self.startIndex = startIndex
@@ -118,32 +119,17 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
         }
         return string
     }
-}
 
-// MARK: - Equatable
+    // MARK: - Equatable
 
-public func ==<T>(lhs: ValueArraySlice<T>, rhs: ValueArray<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
+    public static func ==(lhs: ValueArraySlice, rhs: Base) -> Bool {
+        return lhs.count == rhs.count && lhs.elementsEqual(rhs)
     }
-    
-    for (lhsIndex, rhsIndex) in zip(lhs.startIndex..<lhs.endIndex, 0..<rhs.count) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
+
+    public static func ==(lhs: ValueArraySlice, rhs: ValueArraySlice) -> Bool {
+        return lhs.count == rhs.count && zip(lhs.startIndex..<lhs.endIndex, rhs.startIndex..<rhs.endIndex).all {
+             lhs[$0] == rhs[$1]
         }
     }
-    return true
 }
 
-public func ==<T>(lhs: ValueArraySlice<T>, rhs: ValueArraySlice<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
-    }
-    
-    for (lhsIndex, rhsIndex) in zip(lhs.startIndex..<lhs.endIndex, rhs.startIndex..<rhs.endIndex) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
-    }
-    return true
-}

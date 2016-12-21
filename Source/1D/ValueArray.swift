@@ -23,9 +23,9 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     public typealias Index = Int
     public typealias Slice = ValueArraySlice<Element>
 
-    var mutablePointer: UnsafeMutablePointer<Element>
+    internal(set) var mutablePointer: UnsafeMutablePointer<Element>
     open internal(set) var capacity: Int
-    open var count: Int
+    open internal(set) var count: Int
 
     open var startIndex: Index {
         return 0
@@ -60,26 +60,24 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
 
     open var pointer: UnsafePointer<Element> {
-        return UnsafePointer<Element>(mutablePointer)
+        return UnsafePointer(mutablePointer)
     }
 
     /// Construct an uninitialized ValueArray with the given capacity
     public required init(capacity: Int) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: capacity)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: capacity)
         self.capacity = capacity
         self.count = 0
     }
 
     /// Construct an uninitialized ValueArray with the given size
-    public required init(count: Int) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: count)
-        self.capacity = count
-        self.count = count
+    public required convenience init(count: Int) {
+        self.init(capacity: count)
     }
 
     /// Construct a ValueArray from an array literal
     public required init(arrayLiteral elements: Element...) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: elements.count)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: elements.count)
         self.capacity = elements.count
         self.count = elements.count
         mutablePointer.initialize(from: elements)
@@ -87,7 +85,7 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
 
     /// Construct a ValueArray from contiguous memory
     public required init<C: LinearType>(_ values: C) where C.Element == Element {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: values.count)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: values.count)
         capacity = values.count
         count = values.count
         values.withUnsafeBufferPointer { pointer in
@@ -98,18 +96,13 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
 
     /// Construct a ValueArray of `count` elements, each initialized to `repeatedValue`.
-    public required init(count: Int, repeatedValue: Element) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: count)
-        capacity = count
-        self.count = count
-        for i in 0..<count {
-            self[i] = repeatedValue
-        }
+    public required convenience init(count: Int, repeatedValue: Element) {
+        self.init(count: count) { repeatedValue }
     }
     
     /// Construct a ValueArray of `count` elements, each initialized with `initializer`.
     public required init(count: Int, initializer: () -> Element) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: count)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: count)
         capacity = count
         self.count = count
         for i in 0..<count {
@@ -211,21 +204,21 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
     
     open var description: String {
-        var string = "["
-        for v in self {
-            string += "\(v.description), "
-        }
-        if string.distance(from: string.startIndex, to: string.endIndex) > 1 {
-            let range = string.index(string.endIndex, offsetBy: -2)..<string.endIndex
-            string.replaceSubrange(range, with: "]")
-        } else {
-            string += "]"
-        }
-        return string
+        return "[\(map { "\($0)" }.joined(separator: ", "))]"
     }
 
     open var debugDescription: String {
         return description
+    }
+
+    // MARK: - Equatable
+
+    public static func ==(lhs: ValueArray, rhs: ValueArray) -> Bool {
+        return lhs.count == rhs.count && lhs.elementsEqual(rhs)
+    }
+
+    public static func ==(lhs: ValueArray, rhs: Slice) -> Bool {
+        return lhs.count == rhs.count && lhs.elementsEqual(rhs)
     }
 }
 
@@ -237,31 +230,5 @@ public func swap<T>(_ lhs: inout ValueArray<T>, rhs: inout ValueArray<T>) {
     swap(&lhs.count, &rhs.count)
 }
 
-// MARK: - Equatable
 
-public func ==<T>(lhs: ValueArray<T>, rhs: ValueArray<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
-    }
-    
-    for i in 0..<lhs.count {
-        if lhs[i] != rhs[i] {
-            return false
-        }
-    }
-    return true
-}
-
-public func ==<T>(lhs: ValueArray<T>, rhs: ValueArraySlice<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
-    }
-    
-    for (lhsIndex, rhsIndex) in zip(0..<lhs.count, rhs.startIndex..<rhs.endIndex) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
-    }
-    return true
-}
 

@@ -26,11 +26,11 @@ open class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertible,
     public typealias Slice = MatrixSlice<Element>
     public typealias Element = T
 
-    open var rows: Int
-    open var columns: Int
+    open let rows: Int
+    open let columns: Int
     
-    open var base: Matrix<Element>
-    open var span: Span
+    open let base: Matrix<Element>
+    open let span: Span
 
     open func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         let index = linearIndex(span.startIndex)
@@ -43,7 +43,7 @@ open class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertible,
     open func withUnsafePointer<R>(_ body: (UnsafePointer<Element>) throws -> R) rethrows -> R {
         let index = linearIndex(span.startIndex)
         return try base.withUnsafePointer { pointer in
-            return try body(pointer + index)
+            try body(pointer + index)
         }
     }
 
@@ -58,7 +58,7 @@ open class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertible,
     open func withUnsafeMutablePointer<R>(_ body: (UnsafeMutablePointer<Element>) throws -> R) rethrows -> R {
         let index = linearIndex(span.startIndex)
         return try base.withUnsafeMutablePointer { pointer in
-            return try body(pointer + index)
+            try body(pointer + index)
         }
     }
     
@@ -105,12 +105,12 @@ open class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertible,
     
     fileprivate subscript(span: Span) -> Slice {
         get {
-            assert(self.span.contains(span))
+            assert(span.contains(span))
             return MatrixSlice(base: base, span: span)
         }
         set {
-            assert(self.span.contains(span))
-            assert(self.span ≅ newValue.span)
+            assert(span.contains(span))
+            assert(span ≅ newValue.span)
             for (lhsIndex, rhsIndex) in zip(span, newValue.span) {
                 self[lhsIndex] = newValue[rhsIndex]
             }
@@ -139,12 +139,9 @@ open class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertible,
     
     open func indexIsValid(_ indices: [Int]) -> Bool {
         assert(indices.count == dimensions.count)
-        for (i, index) in indices.enumerated() {
-            if index < span[i].lowerBound || span[i].upperBound < index {
-                return false
-            }
+        return indices.enumerated().all { (i, index) in
+            self.span[i].contains(index)
         }
-        return true
     }
     
     open var description: String {
@@ -170,56 +167,32 @@ open class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertible,
         return description
     }
 }
+extension MatrixSlice {
+    // MARK: - Equatable
 
-// MARK: - Equatable
-
-public func ==<T>(lhs: MatrixSlice<T>, rhs: Matrix<T>) -> Bool {
-    assert(lhs.span ≅ rhs.span)
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
+    public static func ==(lhs: MatrixSlice, rhs: Matrix<T>) -> Bool {
+        assert(lhs.span ≅ rhs.span)
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
-    return true
-}
 
-public func ==<T>(lhs: MatrixSlice<T>, rhs: MatrixSlice<T>) -> Bool {
-    assert(lhs.span ≅ rhs.span)
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
+    public static func ==(lhs: MatrixSlice, rhs: MatrixSlice) -> Bool {
+        assert(lhs.span ≅ rhs.span)
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
-    return true
-}
 
-public func ==<T>(lhs: MatrixSlice<T>, rhs: Tensor<T>) -> Bool {
-    assert(lhs.span ≅ rhs.span)
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
+    public static func ==(lhs: MatrixSlice, rhs: Tensor<T>) -> Bool {
+        assert(lhs.span ≅ rhs.span)
+
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
-    return true
-}
 
-public func ==<T>(lhs: MatrixSlice<T>, rhs: TensorSlice<T>) -> Bool {
-    assert(lhs.span ≅ rhs.span)
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
+    public static func ==(lhs: MatrixSlice, rhs: TensorSlice<T>) -> Bool {
+        assert(lhs.span ≅ rhs.span)
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
-    return true
-}
 
-public func ==<T>(lhs: MatrixSlice<T>, rhs: TwoDimensionalTensorSlice<T>) -> Bool {
-    assert(lhs.span ≅ rhs.span)
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
+    public static func ==(lhs: MatrixSlice, rhs: TwoDimensionalTensorSlice<T>) -> Bool {
+        assert(lhs.span ≅ rhs.span)
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
-    return true
 }
-

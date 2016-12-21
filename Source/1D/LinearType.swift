@@ -20,7 +20,6 @@
 
 /// The `LinearType` protocol should be implemented by any collection that stores its values in a contiguous memory block. This is the building block for one-dimensional operations that are single-instruction, multiple-data (SIMD).
 public protocol LinearType: Collection, TensorType {
-    associatedtype Element
 
     /// The index of the first valid element
     var startIndex: Int { get }
@@ -30,8 +29,6 @@ public protocol LinearType: Collection, TensorType {
 
     /// The step size between valid elements
     var step: Int { get }
-    
-    var span: Span { get }
 
     subscript(position: Int) -> Element { get }
 }
@@ -47,18 +44,11 @@ public extension LinearType {
     }
 }
 
-internal extension LinearType {
-    func indexIsValid(_ index: Int) -> Bool {
-        return startIndex <= index && index < endIndex
-    }
-}
-
 public protocol MutableLinearType: LinearType, MutableTensorType {
     subscript(position: Int) -> Element { get set }
 }
 
 extension Array: LinearType {
-    public typealias Slice = ArraySlice<Element>
     
     public var step: Int {
         return 1
@@ -68,12 +58,8 @@ extension Array: LinearType {
         return Span(ranges: [startIndex ... endIndex - 1])
     }
 
-    public init<C: LinearType>(other: C) where C.Iterator.Element == Array.Element {
-        self.init()
-        
-        for v in other {
-            self.append(v)
-        }
+    public init<C: LinearType>(other: C) where C.Iterator.Element == Element {
+        self = Array(other)
     }
     
     public subscript(indices: [Int]) -> Element {
@@ -87,7 +73,7 @@ extension Array: LinearType {
         }
     }
     
-    public subscript(intervals: [IntervalType]) -> Slice {
+    public subscript(intervals: [IntervalType]) -> SubSequence {
         get {
             assert(indices.count == 1)
             let start = intervals[0].start ?? startIndex
@@ -104,7 +90,7 @@ extension Array: LinearType {
 
     public func withUnsafePointer<R>(_ body: (UnsafePointer<Element>) throws -> R) rethrows -> R {
         return try withUnsafeBufferPointer { pointer in
-            return try body(pointer.baseAddress!)
+            try body(pointer.baseAddress!)
         }
     }
 }

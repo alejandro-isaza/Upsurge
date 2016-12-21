@@ -27,7 +27,6 @@ public enum QuadraticArrangement {
 }
 
 public protocol QuadraticType: TensorType {
-    associatedtype Element
 
     /// The arrangement of rows and columns
     var arrangement: QuadraticArrangement { get }

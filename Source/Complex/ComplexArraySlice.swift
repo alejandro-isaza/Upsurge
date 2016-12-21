@@ -23,11 +23,11 @@ open class ComplexArraySlice<T: Real>: MutableLinearType  {
     public typealias Element = Complex<T>
     public typealias Slice = ComplexArraySlice
     
-    var base: ComplexArray<T>
+    let base: ComplexArray<T>
     
-    open var startIndex: Index
-    open var endIndex: Index
-    open var step: Index
+    open let startIndex: Index
+    open let endIndex: Index
+    open let step: Index
     
     open var span: Span {
         return Span(ranges: [startIndex ... endIndex - 1])
@@ -128,32 +128,14 @@ open class ComplexArraySlice<T: Real>: MutableLinearType  {
     open func formIndex(after i: inout Index) {
         i += 1
     }
-}
 
-// MARK: - Equatable
+    // MARK: - Equatable
 
-public func ==<T: Real>(lhs: ComplexArraySlice<T>, rhs: ComplexArraySlice<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
+    public static func ==(lhs: ComplexArraySlice, rhs: ComplexArraySlice) -> Bool {
+        return lhs.count == rhs.count && lhs.elementsEqual(rhs)
     }
-    
-    for (i, v) in lhs.enumerated() {
-        if v != rhs[i] {
-            return false
-        }
-    }
-    return true
-}
 
-public func ==<T: Real>(lhs: ComplexArraySlice<T>, rhs: ComplexArray<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
+    public static func ==(lhs: ComplexArraySlice, rhs: ComplexArray<T>) -> Bool {
+        return lhs.count == rhs.count && lhs.elementsEqual(rhs)
     }
-    
-    for i in 0..<lhs.count {
-        if lhs[i] != rhs[i] {
-            return false
-        }
-    }
-    return true
 }

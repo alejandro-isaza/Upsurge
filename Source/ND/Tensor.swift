@@ -188,40 +188,27 @@ public func swap<T>(_ lhs: Tensor<T>, rhs: Tensor<T>) {
 
 // MARK: - Equatable
 
-public func ==<T>(lhs: Tensor<T>, rhs: Tensor<T>) -> Bool {
-    return lhs.elements == rhs.elements
-}
-
-public func ==<T>(lhs: Tensor<T>, rhs: TensorSlice<T>) -> Bool {
-    assert(lhs.span ≅ rhs.span)
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
+extension Tensor {
+    public static func ==(lhs: Tensor, rhs: Tensor) -> Bool {
+        return lhs.elements == rhs.elements
     }
-    return true
-}
 
-public func ==<T>(lhs: Tensor<T>, rhs: Matrix<T>) -> Bool {
-    return lhs.elements == rhs.elements
-}
-
-public func ==<T>(lhs: Tensor<T>, rhs: MatrixSlice<T>) -> Bool {
-    assert(lhs.span ≅ rhs.span)
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
+    public static func ==(lhs: Tensor, rhs: TensorSlice<Element>) -> Bool {
+        assert(lhs.span ≅ rhs.span)
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
-    return true
-}
 
-public func ==<T>(lhs: Tensor<T>, rhs: TwoDimensionalTensorSlice<T>) -> Bool {
-    assert(lhs.span ≅ rhs.span)
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
+    public static func ==(lhs: Tensor, rhs: Matrix<Element>) -> Bool {
+        return lhs.elements == rhs.elements
     }
-    return true
+
+    public static func ==(lhs: Tensor, rhs: MatrixSlice<Element>) -> Bool {
+        assert(lhs.span ≅ rhs.span)
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
+    }
+
+    public static func ==(lhs: Tensor, rhs: TwoDimensionalTensorSlice<Element>) -> Bool {
+        assert(lhs.span ≅ rhs.span)
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
+    }
 }

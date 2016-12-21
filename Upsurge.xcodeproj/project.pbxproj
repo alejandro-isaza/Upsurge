@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		37BBC8081E0AFDDB00EE9D1B /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */; };
+		37BBC8091E0AFDDB00EE9D1B /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */; };
+		37BBC80A1E0AFDDB00EE9D1B /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */; };
 		614A101D1C6519610033D201 /* PointerUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614A101C1C6519610033D201 /* PointerUtilities.swift */; };
 		614A101E1C6519610033D201 /* PointerUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614A101C1C6519610033D201 /* PointerUtilities.swift */; };
 		614A101F1C6519610033D201 /* PointerUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614A101C1C6519610033D201 /* PointerUtilities.swift */; };
@@ -163,6 +166,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sequence.swift; path = Extensions/Sequence.swift; sourceTree = "<group>"; };
 		614A101C1C6519610033D201 /* PointerUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointerUtilities.swift; sourceTree = "<group>"; };
 		614ACA701BD1CB7B00A1C13E /* Upsurge.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Upsurge.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		614ACA7A1BD1CB7B00A1C13E /* UpsurgeTests OSX.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UpsurgeTests OSX.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -264,6 +268,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		37BBC8061E0AFCEB00EE9D1B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		614ACA661BD1CB7B00A1C13E = {
 			isa = PBXGroup;
 			children = (
@@ -290,6 +302,7 @@
 		614ACA8A1BD1CBB200A1C13E /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				37BBC8061E0AFCEB00EE9D1B /* Extensions */,
 				616832A31BFE6AED00C4DC6D /* Types */,
 				616832B71BFE6AED00C4DC6D /* Operations */,
 				616832A01BFE6AED00C4DC6D /* 1D */,
@@ -662,6 +675,7 @@
 				8C8684D61C1E4252007306DB /* ComplexArray.swift in Sources */,
 				616832C91BFE6AED00C4DC6D /* Matrix.swift in Sources */,
 				616832D31BFE6AED00C4DC6D /* DSP.swift in Sources */,
+				37BBC8081E0AFDDB00EE9D1B /* Sequence.swift in Sources */,
 				616832E11BFE6AED00C4DC6D /* Auxiliary.swift in Sources */,
 				8C8684D81C1E4341007306DB /* ComplexArrayRealSlice.swift in Sources */,
 				614A101D1C6519610033D201 /* PointerUtilities.swift in Sources */,
@@ -717,6 +731,7 @@
 				8C8684D71C1E4253007306DB /* ComplexArray.swift in Sources */,
 				616832CA1BFE6AED00C4DC6D /* Matrix.swift in Sources */,
 				616832D41BFE6AED00C4DC6D /* DSP.swift in Sources */,
+				37BBC8091E0AFDDB00EE9D1B /* Sequence.swift in Sources */,
 				616832E21BFE6AED00C4DC6D /* Auxiliary.swift in Sources */,
 				8C8684D91C1E4341007306DB /* ComplexArrayRealSlice.swift in Sources */,
 				614A101E1C6519610033D201 /* PointerUtilities.swift in Sources */,
@@ -772,6 +787,7 @@
 				61D046A51C48BB8E00DB7279 /* DSP.swift in Sources */,
 				61D046901C48BB7800DB7279 /* Interval.swift in Sources */,
 				61D046951C48BB7D00DB7279 /* Exponential.swift in Sources */,
+				37BBC80A1E0AFDDB00EE9D1B /* Sequence.swift in Sources */,
 				61D046931C48BB7D00DB7279 /* Arithmetic.swift in Sources */,
 				61D046AB1C48BB9300DB7279 /* ComplexArrayRealSlice.swift in Sources */,
 				614A101F1C6519610033D201 /* PointerUtilities.swift in Sources */,
