@@ -20,11 +20,10 @@
 
 import Accelerate
 
-open class Matrix<T: Value>: MutableQuadraticType, Equatable, CustomStringConvertible {
+open class Matrix<Element: Value>: MutableQuadraticType, Equatable, CustomStringConvertible {
     public typealias Index = (Int, Int)
     public typealias Slice = MatrixSlice<Element>
-    public typealias Element = T
-    
+
     open var rows: Int
     open var columns: Int
     open var elements: ValueArray<Element>
@@ -219,16 +218,16 @@ open class Matrix<T: Value>: MutableQuadraticType, Equatable, CustomStringConver
         return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
 
-    public static func ==(lhs: Matrix, rhs: Tensor<T>) -> Bool {
+    public static func ==(lhs: Matrix, rhs: Tensor<Element>) -> Bool {
         return lhs.elements == rhs.elements
     }
 
-    public static func ==(lhs: Matrix, rhs: TensorSlice<T>) -> Bool {
+    public static func ==(lhs: Matrix, rhs: TensorSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
         return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
 
-    public static func ==(lhs: Matrix, rhs: TwoDimensionalTensorSlice<T>) -> Bool {
+    public static func ==(lhs: Matrix, rhs: TwoDimensionalTensorSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
         return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
