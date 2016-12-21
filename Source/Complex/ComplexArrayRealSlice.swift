@@ -24,10 +24,11 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
     public typealias Element = T
     public typealias Slice = ComplexArrayRealSlice
 
-    var base: ComplexArray<T>
-    public var startIndex: Int
-    public var endIndex: Int
-    public var step: Int
+    public let base: ComplexArray<T>
+    public let startIndex: Int
+    public let endIndex: Int
+    public let step: Int
+
     public var span: Span {
         return Span(ranges: [startIndex ... endIndex - 1])
     }
@@ -35,7 +36,7 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
     public func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeBufferPointer { pointer in
             return try pointer.baseAddress!.withMemoryRebound(to: Element.self, capacity: base.capacity) { pointer in
-                return try body(UnsafeBufferPointer(start: pointer, count: count))
+                try body(UnsafeBufferPointer(start: pointer, count: count))
             }
         }
     }
@@ -43,7 +44,7 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
     public func withUnsafePointer<R>(_ body: (UnsafePointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafePointer { pointer in
             return try pointer.withMemoryRebound(to: Element.self, capacity: base.capacity) { pointer in
-                return try body(pointer)
+                try body(pointer)
             }
         }
     }
@@ -51,7 +52,7 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
     public func withUnsafeMutableBufferPointer<R>(_ body: (UnsafeMutableBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeMutableBufferPointer { pointer in
             return try pointer.baseAddress!.withMemoryRebound(to: Element.self, capacity: base.capacity) { pointer in
-                return try body(UnsafeMutableBufferPointer(start: pointer, count: count))
+                try body(UnsafeMutableBufferPointer(start: pointer, count: count))
             }
         }
     }
@@ -59,7 +60,7 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
     public func withUnsafeMutablePointer<R>(_ body: (UnsafeMutablePointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeMutablePointer { pointer in
             return try pointer.withMemoryRebound(to: Element.self, capacity: base.capacity) { pointer in
-                return try body(pointer)
+                try body(pointer)
             }
         }
     }
@@ -77,7 +78,7 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
             let baseIndex = startIndex + index * step
             precondition(0 <= baseIndex && baseIndex < 2 * base.count)
             return withUnsafePointer { pointer in
-                return pointer[baseIndex]
+                pointer[baseIndex]
             }
         }
         set {
@@ -125,17 +126,9 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
     public func formIndex(after i: inout Index) {
         i += 1
     }
+
+    static public func ==(lhs: ComplexArrayRealSlice, rhs: ComplexArrayRealSlice) -> Bool {
+        return lhs.count == rhs.count && lhs.elementsEqual(rhs)
+    }
 }
 
-public func ==<T: Real>(lhs: ComplexArrayRealSlice<T>, rhs: ComplexArrayRealSlice<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
-    }
-
-    for i in 0..<lhs.count {
-        if lhs[i] != rhs[i] {
-            return false
-        }
-    }
-    return true
-}
