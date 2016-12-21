@@ -96,13 +96,8 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
 
     /// Construct a ValueArray of `count` elements, each initialized to `repeatedValue`.
-    public required init(count: Int, repeatedValue: Element) {
-        mutablePointer = UnsafeMutablePointer.allocate(capacity: count)
-        capacity = count
-        self.count = count
-        for i in 0..<count {
-            self[i] = repeatedValue
-        }
+    public required convenience init(count: Int, repeatedValue: Element) {
+        self.init(count: count) { repeatedValue }
     }
     
     /// Construct a ValueArray of `count` elements, each initialized with `initializer`.
