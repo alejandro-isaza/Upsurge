@@ -64,12 +64,9 @@ open class TwoDimensionalTensorSlice<T: Value>: MutableQuadraticType, Equatable 
         assert(span.dimensions.reduce(0){ $0.1 > 1 ? $0.0 + 1 : $0.0 } <= 2)
         assert(span.dimensions.last! >= 1)
         
-        var rowIndex: Int
-        if let index = span.dimensions.index(where: { $0 > 1 }) {
-            rowIndex = index
-        } else {
-            rowIndex = span.dimensions.count - 2
-        }
+        let rowIndex: Int = span.dimensions.index { $0 > 1 } ??
+                           (span.dimensions.count - 2)
+
         rows = span.dimensions[rowIndex]
         columns = span.dimensions.last!
         
@@ -138,13 +135,8 @@ open class TwoDimensionalTensorSlice<T: Value>: MutableQuadraticType, Equatable 
     }
     
     open var isContiguous: Bool {
-        let onesCount: Int
-        if let index = dimensions.index(where: { $0 != 1 }) {
-            onesCount = index
-        } else {
-            onesCount = rank
-        }
-        
+        let onesCount: Int = (dimensions.index { $0 != 1 }) ?? rank
+
         let diff = (0..<rank).map({ dimensions[$0] - base.dimensions[$0] }).reversed()
         let fullCount: Int
         if let index = diff.index(where: { $0 != 0 }) , index.base < count {
