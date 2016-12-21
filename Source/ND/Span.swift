@@ -96,15 +96,15 @@ public struct Span: ExpressibleByArrayLiteral, Sequence {
     }
     
     subscript(index: Int) -> Element {
-        return self.ranges[index]
+        return ranges[index]
     }
 
     subscript(range: ClosedRange<Int>) -> ArraySlice<Element> {
-        return self.ranges[range]
+        return ranges[range]
     }
 
     subscript(range: Range<Int>) -> ArraySlice<Element> {
-        return self.ranges[range]
+        return ranges[range]
     }
     
     func contains(_ other: Span) -> Bool {
