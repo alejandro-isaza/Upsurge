@@ -59,11 +59,7 @@ extension Array: LinearType {
     }
 
     public init<C: LinearType>(other: C) where C.Iterator.Element == Element {
-        self.init()
-        
-        for v in other {
-            self.append(v)
-        }
+        self = Array(other)
     }
     
     public subscript(indices: [Int]) -> Element {
