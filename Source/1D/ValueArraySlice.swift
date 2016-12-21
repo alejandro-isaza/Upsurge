@@ -107,17 +107,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
     }
     
     public var description: String {
-        var string = "["
-        for i in stride(from: startIndex, to: endIndex, by: step) {
-            string += "\(base[i]), "
-        }
-        if string.distance(from: string.startIndex, to: string.endIndex) > 1 {
-            let range = string.index(string.endIndex, offsetBy: -2)..<string.endIndex
-            string.replaceSubrange(range, with: "]")
-        } else {
-            string += "]"
-        }
-        return string
+        return "[\(map { "\($0)" }.joined(separator: ", "))]"
     }
 
     // MARK: - Equatable
