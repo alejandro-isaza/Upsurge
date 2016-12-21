@@ -16,3 +16,9 @@ extension Sequence {
         return true
     }
 }
+
+internal extension Collection {
+    func indexIsValid(_ index: Index) -> Bool {
+        return (startIndex..<endIndex).contains(index)
+    }
+}

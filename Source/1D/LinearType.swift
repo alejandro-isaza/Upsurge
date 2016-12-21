@@ -47,12 +47,6 @@ public extension LinearType {
     }
 }
 
-internal extension LinearType {
-    func indexIsValid(_ index: Int) -> Bool {
-        return startIndex <= index && index < endIndex
-    }
-}
-
 public protocol MutableLinearType: LinearType, MutableTensorType {
     subscript(position: Int) -> Element { get set }
 }
