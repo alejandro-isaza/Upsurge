@@ -113,13 +113,8 @@ open class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     }
     
     open var isContiguous: Bool {
-        let onesCount: Int
-        if let index = (dimensions.index { $0 != 1 }) {
-            onesCount = index
-        } else {
-            onesCount = rank
-        }
-        
+        let onesCount: Int = (dimensions.index { $0 != 1 }) ?? rank
+
         let diff = (0..<rank).map({ dimensions[$0] - base.dimensions[$0] }).reversed()
         let fullCount: Int
         if let index = (diff.index { $0 != 0 }), index.base < count {
@@ -133,24 +128,12 @@ open class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     
     open func indexIsValid(_ indices: [Int]) -> Bool {
         assert(indices.count == dimensions.count)
-        for (i, index) in indices.enumerated() where !span[i].contains(index) {
-            return false
-        }
-        return true
+        return indices.enumerated().all { (i,index) in self.span[i].contains(index) }
     }
 }
 
 // MARK: - Equatable
 
 public func ==<L: TensorType, R: TensorType>(lhs: L, rhs: R) -> Bool where L.Element == R.Element, L.Element: Equatable {
-    if !(lhs.span ≅ rhs.span) {
-        return false
-    }
-
-    for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
-    }
-    return true
+    return lhs.span ≅ rhs.span && zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
 }
