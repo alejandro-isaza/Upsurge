@@ -22,6 +22,7 @@
 /// Span is a collection of Ranges to specify a multi-dimensional slice of a Tensor.
 public struct Span: ExpressibleByArrayLiteral, Sequence {
     public typealias Element = CountableClosedRange<Int>
+    public typealias SubSequence = ArraySlice<Element>
 
     private var ranges: [Element]
 
@@ -99,11 +100,11 @@ public struct Span: ExpressibleByArrayLiteral, Sequence {
         return self.ranges[index]
     }
 
-    subscript(range: ClosedRange<Int>) -> ArraySlice<Element> {
+    subscript(range: ClosedRange<Int>) -> SubSequence {
         return self.ranges[range]
     }
 
-    subscript(range: Range<Int>) -> ArraySlice<Element> {
+    subscript(range: Range<Int>) -> SubSequence {
         return self.ranges[range]
     }
     
