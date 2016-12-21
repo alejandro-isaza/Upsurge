@@ -77,76 +77,76 @@ public func <<T: Real>(lhs: Complex<T>, rhs: Complex<T>) -> Bool {
 // MARK: - Double
 
 public func +(lhs: Complex<Double>, rhs: Complex<Double>) -> Complex<Double> {
-    return Complex<Double>(real: lhs.real + rhs.real, imag: lhs.imag + rhs.imag)
+    return Complex(real: lhs.real + rhs.real, imag: lhs.imag + rhs.imag)
 }
 
 public func -(lhs: Complex<Double>, rhs: Complex<Double>) -> Complex<Double> {
-    return Complex<Double>(real: lhs.real - rhs.real, imag: lhs.imag - rhs.imag)
+    return Complex(real: lhs.real - rhs.real, imag: lhs.imag - rhs.imag)
 }
 
 public func *(lhs: Complex<Double>, rhs: Complex<Double>) -> Complex<Double> {
-    return Complex<Double>(real: lhs.real * rhs.real - lhs.imag * rhs.imag, imag: lhs.real * rhs.imag + lhs.imag * rhs.real)
+    return Complex(real: lhs.real * rhs.real - lhs.imag * rhs.imag, imag: lhs.real * rhs.imag + lhs.imag * rhs.real)
 }
 
 public func *(x: Complex<Double>, a: Double) -> Complex<Double> {
-    return Complex<Double>(real: x.real * a, imag: x.imag * a)
+    return Complex(real: x.real * a, imag: x.imag * a)
 }
 
 public func *(a: Double, x: Complex<Double>) -> Complex<Double> {
-    return Complex<Double>(real: x.real * a, imag: x.imag * a)
+    return Complex(real: x.real * a, imag: x.imag * a)
 }
 
 public func /(lhs: Complex<Double>, rhs: Complex<Double>) -> Complex<Double> {
     let rhsMagSq = rhs.real*rhs.real + rhs.imag*rhs.imag
-    return Complex<Double>(
+    return Complex(
         real: (lhs.real*rhs.real + lhs.imag*rhs.imag) / rhsMagSq,
         imag: (lhs.imag*rhs.real - lhs.real*rhs.imag) / rhsMagSq)
 }
 
 public func /(x: Complex<Double>, a: Double) -> Complex<Double> {
-    return Complex<Double>(real: x.real / a, imag: x.imag / a)
+    return Complex(real: x.real / a, imag: x.imag / a)
 }
 
 public func /(a: Double, x: Complex<Double>) -> Complex<Double> {
     let xMagSq = x.real*x.real + x.imag*x.imag
-    return Complex<Double>(real: a*x.real / xMagSq, imag: -a*x.imag / xMagSq)
+    return Complex(real: a*x.real / xMagSq, imag: -a*x.imag / xMagSq)
 }
 
 
 // MARK: - Float
 
 public func +(lhs: Complex<Float>, rhs: Complex<Float>) -> Complex<Float> {
-    return Complex<Float>(real: lhs.real + rhs.real, imag: lhs.imag + rhs.imag)
+    return Complex(real: lhs.real + rhs.real, imag: lhs.imag + rhs.imag)
 }
 
 public func -(lhs: Complex<Float>, rhs: Complex<Float>) -> Complex<Float> {
-    return Complex<Float>(real: lhs.real - rhs.real, imag: lhs.imag - rhs.imag)
+    return Complex(real: lhs.real - rhs.real, imag: lhs.imag - rhs.imag)
 }
 
 public func *(lhs: Complex<Float>, rhs: Complex<Float>) -> Complex<Float> {
-    return Complex<Float>(real: lhs.real * rhs.real - lhs.imag * rhs.imag, imag: lhs.real * rhs.imag + lhs.imag * rhs.real)
+    return Complex(real: lhs.real * rhs.real - lhs.imag * rhs.imag, imag: lhs.real * rhs.imag + lhs.imag * rhs.real)
 }
 
 public func *(x: Complex<Float>, a: Float) -> Complex<Float> {
-    return Complex<Float>(real: x.real * a, imag: x.imag * a)
+    return Complex(real: x.real * a, imag: x.imag * a)
 }
 
 public func *(a: Float, x: Complex<Float>) -> Complex<Float> {
-    return Complex<Float>(real: x.real * a, imag: x.imag * a)
+    return Complex(real: x.real * a, imag: x.imag * a)
 }
 
 public func /(lhs: Complex<Float>, rhs: Complex<Float>) -> Complex<Float> {
     let rhsMagSq = rhs.real*rhs.real + rhs.imag*rhs.imag
-    return Complex<Float>(
+    return Complex(
         real: (lhs.real*rhs.real + lhs.imag*rhs.imag) / rhsMagSq,
         imag: (lhs.imag*rhs.real - lhs.real*rhs.imag) / rhsMagSq)
 }
 
 public func /(x: Complex<Float>, a: Float) -> Complex<Float> {
-    return Complex<Float>(real: x.real / a, imag: x.imag / a)
+    return Complex(real: x.real / a, imag: x.imag / a)
 }
 
 public func /(a: Float, x: Complex<Float>) -> Complex<Float> {
     let xMagSq = x.real*x.real + x.imag*x.imag
-    return Complex<Float>(real: a*x.real / xMagSq, imag: -a*x.imag / xMagSq)
+    return Complex(real: a*x.real / xMagSq, imag: -a*x.imag / xMagSq)
 }
