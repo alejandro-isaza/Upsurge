@@ -21,7 +21,7 @@
 // MARK: - Double
 
 public func sum(_ x: ComplexArray<Double>) -> Complex<Double> {
-    return Complex<Double>(real: sum(x.reals), imag: sum(x.imags))
+    return Complex(real: sum(x.reals), imag: sum(x.imags))
 }
 
 // MARK: Operators
@@ -101,7 +101,7 @@ public func /=(lhs: inout ComplexArray<Double>, rhs: Double) {
 }
 
 public func /(lhs: ComplexArray<Double>, rhs: Double) -> ComplexArray<Double> {
-    var results = ComplexArray<Double>(lhs)
+    var results = ComplexArray(lhs)
     results /= rhs
     return results
 }
@@ -190,7 +190,7 @@ public func /=(lhs: inout ComplexArray<Float>, rhs: Float) {
 }
 
 public func /(lhs: ComplexArray<Float>, rhs: Float) -> ComplexArray<Float> {
-    var results = ComplexArray<Float>(lhs)
+    var results = ComplexArray(lhs)
     results /= rhs
     return results
 }
