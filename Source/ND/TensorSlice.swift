@@ -23,9 +23,9 @@ open class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     public typealias Index = [Int]
     public typealias Slice = TensorSlice<Element>
     
-    var base: Tensor<Element>
+    open let base: Tensor<Element>
 
-    open var span: Span
+    open let span: Span
 
     open func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeBufferPointer(body)
@@ -100,11 +100,11 @@ open class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     
     subscript(span: Span) -> Slice {
         get {
-            assert(self.span.contains(span))
+            assert(span.contains(span))
             return TensorSlice(base: base, span: span)
         }
         set {
-            assert(self.span.contains(span))
+            assert(span.contains(span))
             assert(span ≅ newValue.span)
             for (lhsIndex, rhsIndex) in zip(span, newValue.span)  {
                 base[lhsIndex] = newValue[rhsIndex]
@@ -114,7 +114,7 @@ open class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     
     open var isContiguous: Bool {
         let onesCount: Int
-        if let index = dimensions.index(where: { $0 != 1 }) {
+        if let index = (dimensions.index { $0 != 1 }) {
             onesCount = index
         } else {
             onesCount = rank
@@ -122,7 +122,7 @@ open class TensorSlice<Element: Value>: MutableTensorType, Equatable {
         
         let diff = (0..<rank).map({ dimensions[$0] - base.dimensions[$0] }).reversed()
         let fullCount: Int
-        if let index = diff.index(where: { $0 != 0 }) , index.base < count {
+        if let index = (diff.index { $0 != 0 }), index.base < count {
             fullCount = rank - index.base
         } else {
             fullCount = rank
@@ -133,10 +133,8 @@ open class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     
     open func indexIsValid(_ indices: [Int]) -> Bool {
         assert(indices.count == dimensions.count)
-        for (i, index) in indices.enumerated() {
-            if index < span[i].lowerBound || span[i].upperBound < index {
-                return false
-            }
+        for (i, index) in indices.enumerated() where !span[i].contains(index) {
+            return false
         }
         return true
     }
