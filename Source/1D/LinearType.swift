@@ -58,7 +58,6 @@ public protocol MutableLinearType: LinearType, MutableTensorType {
 }
 
 extension Array: LinearType {
-    public typealias Slice = ArraySlice<Element>
     
     public var step: Int {
         return 1
@@ -68,7 +67,7 @@ extension Array: LinearType {
         return Span(ranges: [startIndex ... endIndex - 1])
     }
 
-    public init<C: LinearType>(other: C) where C.Iterator.Element == Array.Element {
+    public init<C: LinearType>(other: C) where C.Iterator.Element == Element {
         self.init()
         
         for v in other {
@@ -87,7 +86,7 @@ extension Array: LinearType {
         }
     }
     
-    public subscript(intervals: [IntervalType]) -> Slice {
+    public subscript(intervals: [IntervalType]) -> SubSequence {
         get {
             assert(indices.count == 1)
             let start = intervals[0].start ?? startIndex
