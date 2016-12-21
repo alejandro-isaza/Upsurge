@@ -60,7 +60,7 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
 
     open var pointer: UnsafePointer<Element> {
-        return UnsafePointer<Element>(mutablePointer)
+        return UnsafePointer(mutablePointer)
     }
 
     /// Construct an uninitialized ValueArray with the given capacity
@@ -211,21 +211,21 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
     
     open var description: String {
-        var string = "["
-        for v in self {
-            string += "\(v.description), "
-        }
-        if string.distance(from: string.startIndex, to: string.endIndex) > 1 {
-            let range = string.index(string.endIndex, offsetBy: -2)..<string.endIndex
-            string.replaceSubrange(range, with: "]")
-        } else {
-            string += "]"
-        }
-        return string
+        return "[\(map { "\($0)" }.joined(separator: ", "))]"
     }
 
     open var debugDescription: String {
         return description
+    }
+
+    // MARK: - Equatable
+
+    public static func ==(lhs: ValueArray, rhs: ValueArray) -> Bool {
+        return lhs.count == rhs.count && lhs.elementsEqual(rhs)
+    }
+
+    public static func ==(lhs: ValueArray, rhs: Slice) -> Bool {
+        return lhs.count == rhs.count && lhs.elementsEqual(rhs)
     }
 }
 
@@ -237,31 +237,5 @@ public func swap<T>(_ lhs: inout ValueArray<T>, rhs: inout ValueArray<T>) {
     swap(&lhs.count, &rhs.count)
 }
 
-// MARK: - Equatable
 
-public func ==<T>(lhs: ValueArray<T>, rhs: ValueArray<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
-    }
-    
-    for i in 0..<lhs.count {
-        if lhs[i] != rhs[i] {
-            return false
-        }
-    }
-    return true
-}
-
-public func ==<T>(lhs: ValueArray<T>, rhs: ValueArraySlice<T>) -> Bool {
-    if lhs.count != rhs.count {
-        return false
-    }
-    
-    for (lhsIndex, rhsIndex) in zip(0..<lhs.count, rhs.startIndex..<rhs.endIndex) {
-        if lhs[lhsIndex] != rhs[rhsIndex] {
-            return false
-        }
-    }
-    return true
-}
 
