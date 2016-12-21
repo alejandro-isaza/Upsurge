@@ -23,9 +23,9 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     public typealias Index = Int
     public typealias Slice = ValueArraySlice<Element>
 
-    var mutablePointer: UnsafeMutablePointer<Element>
+    internal(set) var mutablePointer: UnsafeMutablePointer<Element>
     open internal(set) var capacity: Int
-    open var count: Int
+    open internal(set) var count: Int
 
     open var startIndex: Index {
         return 0
@@ -65,21 +65,19 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
 
     /// Construct an uninitialized ValueArray with the given capacity
     public required init(capacity: Int) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: capacity)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: capacity)
         self.capacity = capacity
         self.count = 0
     }
 
     /// Construct an uninitialized ValueArray with the given size
-    public required init(count: Int) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: count)
-        self.capacity = count
-        self.count = count
+    public required convenience init(count: Int) {
+        self.init(capacity: count)
     }
 
     /// Construct a ValueArray from an array literal
     public required init(arrayLiteral elements: Element...) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: elements.count)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: elements.count)
         self.capacity = elements.count
         self.count = elements.count
         mutablePointer.initialize(from: elements)
@@ -87,7 +85,7 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
 
     /// Construct a ValueArray from contiguous memory
     public required init<C: LinearType>(_ values: C) where C.Element == Element {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: values.count)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: values.count)
         capacity = values.count
         count = values.count
         values.withUnsafeBufferPointer { pointer in
@@ -99,7 +97,7 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
 
     /// Construct a ValueArray of `count` elements, each initialized to `repeatedValue`.
     public required init(count: Int, repeatedValue: Element) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: count)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: count)
         capacity = count
         self.count = count
         for i in 0..<count {
@@ -109,7 +107,7 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     
     /// Construct a ValueArray of `count` elements, each initialized with `initializer`.
     public required init(count: Int, initializer: () -> Element) {
-        mutablePointer = UnsafeMutablePointer<Element>.allocate(capacity: count)
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: count)
         capacity = count
         self.count = count
         for i in 0..<count {
