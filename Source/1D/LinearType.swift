@@ -97,7 +97,7 @@ extension Array: LinearType {
 
     public func withUnsafePointer<R>(_ body: (UnsafePointer<Element>) throws -> R) rethrows -> R {
         return try withUnsafeBufferPointer { pointer in
-            return try body(pointer.baseAddress!)
+            try body(pointer.baseAddress!)
         }
     }
 }
