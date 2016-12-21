@@ -195,12 +195,7 @@ extension Tensor {
 
     public static func ==(lhs: Tensor, rhs: TensorSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
-        for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-            if lhs[lhsIndex] != rhs[rhsIndex] {
-                return false
-            }
-        }
-        return true
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
 
     public static func ==(lhs: Tensor, rhs: Matrix<Element>) -> Bool {
@@ -209,21 +204,11 @@ extension Tensor {
 
     public static func ==(lhs: Tensor, rhs: MatrixSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
-        for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-            if lhs[lhsIndex] != rhs[rhsIndex] {
-                return false
-            }
-        }
-        return true
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
 
     public static func ==(lhs: Tensor, rhs: TwoDimensionalTensorSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
-        for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
-            if lhs[lhsIndex] != rhs[rhsIndex] {
-                return false
-            }
-        }
-        return true
+        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
 }
