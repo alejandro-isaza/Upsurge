@@ -71,8 +71,10 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
 
     /// Construct an uninitialized ValueArray with the given size
-    public required convenience init(count: Int) {
-        self.init(capacity: count)
+    public required init(count: Int) {
+        mutablePointer = UnsafeMutablePointer.allocate(capacity: count)
+        self.capacity = count
+        self.count = count
     }
 
     /// Construct a ValueArray from an array literal
