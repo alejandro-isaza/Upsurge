@@ -24,7 +24,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType {
     public typealias Slice = ComplexArraySlice
 
     let base: ComplexArray<T>
-    
+
     open let startIndex: Index
     open let endIndex: Index
     open let step: Index

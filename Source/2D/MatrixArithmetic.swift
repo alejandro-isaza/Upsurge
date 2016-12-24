@@ -70,7 +70,7 @@ public func normalize<M: QuadraticType>(_ x: M) -> Matrix<Double> where M.Elemen
 
     let inputMatrix = Matrix<Double>(x)
 
-    var individualVectors:[[Double]] = []
+    var individualVectors: [[Double]] = []
     
     for i in 0..<inputMatrix.columns {
         let length = Int32(inputMatrix.column(i).count)
@@ -211,7 +211,7 @@ public func normalize<M: QuadraticType>(_ x: M) -> Matrix<Float> where M.Element
 
     let inputMatrix = Matrix<Float>(x)
 
-    var individualVectors:[[Float]] = []
+    var individualVectors: [[Float]] = []
     
     for i in 0..<inputMatrix.columns {
         let length = Int32(inputMatrix.column(i).count)
