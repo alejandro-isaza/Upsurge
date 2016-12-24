@@ -25,7 +25,7 @@ class ArithmeticTests: XCTestCase {
     let n = 10000
 
     func testSumArray() {
-        let values = (0...n).map{ _ in
+        let values = (0...n).map { _ in
             Double(arc4random()) - Double(UInt32.max)/2
         }
         let array = [Double](values)
@@ -44,7 +44,7 @@ class ArithmeticTests: XCTestCase {
     }
 
     func testSumRealArray() {
-        let values = (0...n).map{ _ in
+        let values = (0...n).map { _ in
             Double(arc4random()) - Double(UInt32.max)/2
         }
         let array = ValueArray<Double>(values)
@@ -70,12 +70,12 @@ class ArithmeticTests: XCTestCase {
     }
 
     func testSqrt() {
-        let values = (0...n).map{_ in Double(arc4random())}
-        measureAndValidateMappedFunctionWithAccuracy(values, member: { return sqrt($0) }, mapped: { $0.map{ sqrt($0) } }, accuracy: 0.0001)
+        let values = (0...n).map {_ in Double(arc4random())}
+        measureAndValidateMappedFunctionWithAccuracy(values, member: { return sqrt($0) }, mapped: { $0.map { sqrt($0) } }, accuracy: 0.0001)
     }
 
     func testSqrtNoAlloc() {
-        let values = (0..<n).map{_ in Double(arc4random())}
+        let values = (0..<n).map {_ in Double(arc4random())}
         var results = ValueArray<Double>(count: n)
         measure {
             sqrt(values, results: &results)
@@ -84,7 +84,6 @@ class ArithmeticTests: XCTestCase {
             XCTAssertEqualWithAccuracy(results[i], sqrt(values[i]), accuracy: 0.0001)
         }
     }
-
 
     func testAdd() {
         let a1: ValueArray<Double> = [1.0, 2.0, 3.0]
@@ -128,7 +127,7 @@ class ArithmeticTests: XCTestCase {
             XCTAssertEqual(r[i], 4.0)
         }
     }
-  
+
   func testStd() {
         let a1: ValueArray<Double> = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
         let r = std(a1)

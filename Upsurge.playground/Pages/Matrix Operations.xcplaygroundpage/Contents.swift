@@ -3,7 +3,7 @@
 import Upsurge
 //: Let's define two matrices using row notation
 let A = Matrix<Double>([
-    [1,  1],
+    [1, 1],
     [1, -1]
 ])
 let C = Matrix<Double>([

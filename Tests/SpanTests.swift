@@ -25,13 +25,13 @@ class RangedIndexTests: XCTestCase {
     var rangedDimension: CountableClosedRange<Int>?
     var indexedDimension: CountableClosedRange<Int>?
     var rangedIndex: Span?
-    
+
     override func setUp() {
         rangedDimension = 4...7
         indexedDimension = 1...1
         rangedIndex = [0...1, 5...5, 3...4, 2...3, 0...0]
     }
-    
+
     func testDimensionGenerator() {
         var result = [Int]()
         for i in rangedDimension! {

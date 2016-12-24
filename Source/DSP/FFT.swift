@@ -107,7 +107,6 @@ open class FFTDouble {
     }
 }
 
-
 open class FFTFloat {
     fileprivate var setup: FFTSetup
     open fileprivate(set) var maxLength: vDSP_Length

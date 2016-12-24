@@ -38,7 +38,7 @@ public extension LinearType {
     public var count: Int {
         return (endIndex - startIndex + step - 1) / step
     }
-    
+
     public var dimensions: [Int] {
         return [count]
     }
@@ -49,20 +49,23 @@ public protocol MutableLinearType: LinearType, MutableTensorType {
 }
 
 extension Array: LinearType {
-    
-    public var step: Int {
+    public typealias Slice = ArraySlice<Element>
+
+    public var step: IndexDistance {
         return 1
     }
-    
+
     public var span: Span {
         return Span(ranges: [startIndex ... endIndex - 1])
     }
 
+
     public init<C: LinearType>(other: C) where C.Iterator.Element == Element {
         self = Array(other)
+
     }
-    
-    public subscript(indices: [Int]) -> Element {
+
+    public subscript(indices: [Index]) -> Element {
         get {
             assert(indices.count == 1)
             return self[indices[0]]
@@ -72,8 +75,9 @@ extension Array: LinearType {
             self[indices[0]] = newValue
         }
     }
-    
-    public subscript(intervals: [IntervalType]) -> SubSequence {
+
+    public subscript(intervals: [IntervalType]) -> Slice {
+
         get {
             assert(indices.count == 1)
             let start = intervals[0].start ?? startIndex

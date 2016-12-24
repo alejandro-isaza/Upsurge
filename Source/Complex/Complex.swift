@@ -60,7 +60,7 @@ public struct Complex<Element: Real>: Value {
     public var hashValue: Int {
         return real.hashValue ^ imag.hashValue
     }
-    
+
     public var description: String {
         return "\(real) + \(imag)i"
     }
@@ -111,7 +111,6 @@ public func /(a: Double, x: Complex<Double>) -> Complex<Double> {
     let xMagSq = x.real*x.real + x.imag*x.imag
     return Complex(real: a*x.real / xMagSq, imag: -a*x.imag / xMagSq)
 }
-
 
 // MARK: - Float
 

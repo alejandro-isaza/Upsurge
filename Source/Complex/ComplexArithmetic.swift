@@ -31,7 +31,6 @@ public func +=(lhs: inout ComplexArray<Double>, rhs: ComplexArray<Double>) {
     lhs.imags += rhs.imags
 }
 
-
 public func +(lhs: ComplexArray<Double>, rhs: ComplexArray<Double>) -> ComplexArray<Double> {
     var results = ComplexArray(lhs)
     results += rhs
@@ -42,7 +41,6 @@ public func -=(lhs: inout ComplexArray<Double>, rhs: ComplexArray<Double>) {
     lhs.reals -= rhs.reals
     lhs.imags -= rhs.imags
 }
-
 
 public func -(lhs: ComplexArray<Double>, rhs: ComplexArray<Double>) -> ComplexArray<Double> {
     var results = ComplexArray(lhs)
@@ -106,7 +104,6 @@ public func /(lhs: ComplexArray<Double>, rhs: Double) -> ComplexArray<Double> {
     return results
 }
 
-
 // MARK: - Float
 
 public func sum(_ x: ComplexArray<Float>) -> Complex<Float> {
@@ -120,7 +117,6 @@ public func +=(lhs: inout ComplexArray<Float>, rhs: ComplexArray<Float>) {
     lhs.imags += rhs.imags
 }
 
-
 public func +(lhs: ComplexArray<Float>, rhs: ComplexArray<Float>) -> ComplexArray<Float> {
     var results = ComplexArray(lhs)
     results += rhs
@@ -131,7 +127,6 @@ public func -=(lhs: inout ComplexArray<Float>, rhs: ComplexArray<Float>) {
     lhs.reals -= rhs.reals
     lhs.imags -= rhs.imags
 }
-
 
 public func -(lhs: ComplexArray<Float>, rhs: ComplexArray<Float>) -> ComplexArray<Float> {
     var results = ComplexArray(lhs)

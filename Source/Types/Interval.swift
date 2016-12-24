@@ -26,11 +26,11 @@ public protocol IntervalType {
 public enum Interval: IntervalType, ExpressibleByIntegerLiteral {
     case all
     case range(CountableClosedRange<Int>)
-    
+
     public init(range: CountableClosedRange<Int>) {
         self = Interval.range(range)
     }
-    
+
     public init(integerLiteral value: Int) {
         self = Interval.range(value...value)
     }

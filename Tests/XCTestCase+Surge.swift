@@ -22,7 +22,7 @@ import Foundation
 import XCTest
 
 extension XCTestCase {
-    func measureAndValidateMappedFunctionWithAccuracy<C : Collection>(_ source: C, member: (C.Iterator.Element) -> (C.Iterator.Element), mapped: @escaping (C) -> ([C.Iterator.Element]), accuracy: C.Iterator.Element) where C.Iterator.Element: ExpressibleByFloatLiteral & FloatingPoint {
+    func measureAndValidateMappedFunctionWithAccuracy<C: Collection>(_ source: C, member: (C.Iterator.Element) -> (C.Iterator.Element), mapped: @escaping (C) -> ([C.Iterator.Element]), accuracy: C.Iterator.Element) where C.Iterator.Element: ExpressibleByFloatLiteral & FloatingPoint {
         var expected = source.map(member)
 
         var actual: [C.Iterator.Element] = []

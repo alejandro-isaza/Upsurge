@@ -100,7 +100,7 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
             self[indices[0]] = newValue
         }
     }
-    
+
     public subscript(intervals: [IntervalType]) -> Slice {
         get {
             assert(intervals.count == 1)

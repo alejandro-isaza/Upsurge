@@ -42,7 +42,7 @@ open class Tensor<Element: Value>: MutableTensorType, Equatable {
     open func withUnsafeMutablePointer<R>(_ body: (UnsafeMutablePointer<Element>) throws -> R) rethrows -> R {
         return try elements.withUnsafeMutablePointer(body)
     }
-    
+
     open var span: Span
 
     public init<M: LinearType>(dimensions: [Int], elements: M) where M.Element == Element {
@@ -55,7 +55,7 @@ open class Tensor<Element: Value>: MutableTensorType, Equatable {
         self.span = tensor.span
         self.elements = ValueArray<Element>(tensor.elements)
     }
-    
+
     public convenience init(_ tensorSlice: TensorSlice<Element>) {
         self.init(dimensions: tensorSlice.dimensions)
         for index in Span(zeroTo: dimensions) {
@@ -82,7 +82,7 @@ open class Tensor<Element: Value>: MutableTensorType, Equatable {
         self.span = Span(zeroTo: dimensions)
         self.elements = ValueArray(count: dimensions.reduce(1, *), initializer: initializer)
     }
-    
+
     open subscript(indices: Int...) -> Element {
         get {
             return self[indices]
@@ -143,7 +143,7 @@ open class Tensor<Element: Value>: MutableTensorType, Equatable {
             tensorSlice[tensorSlice.span] = newValue
         }
     }
-    
+
     open func reshape(_ span: Span) {
         precondition(span.count == self.span.count)
         self.span = span
@@ -152,7 +152,7 @@ open class Tensor<Element: Value>: MutableTensorType, Equatable {
     open func copy() -> Tensor {
         return Tensor(self)
     }
-    
+
     func spanIsValid(_ subSpan: Span) -> Bool {
         let span = Span(zeroTo: dimensions)
         return span.contains(subSpan)
@@ -170,7 +170,7 @@ extension Tensor {
     func asMatrix(_ span: Span) -> TwoDimensionalTensorSlice<Element> {
         return TwoDimensionalTensorSlice(base: self, span: span)
     }
-    
+
     public func asMatrix(_ intervals: IntervalType...) -> TwoDimensionalTensorSlice<Element> {
         let baseSpan = Span(zeroTo: dimensions)
         let matrixSpan = Span(base: baseSpan, intervals: intervals)

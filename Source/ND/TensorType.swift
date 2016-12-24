@@ -21,10 +21,10 @@
 public protocol TensorType {
     associatedtype Element
     associatedtype Slice
-    
+
     /// A description of the dimensions over which the TensorType spans
     var span: Span { get }
-    
+
     subscript(intervals: [IntervalType]) -> Slice { get }
     subscript(intervals: [Int]) -> Element { get }
 
@@ -40,17 +40,17 @@ public extension TensorType {
     public var dimensions: [Int] {
         return span.dimensions
     }
-    
+
     /// The number of valid element in the memory block, taking into account the step size.
     public var count: Int {
         return span.count
     }
-    
+
     /// The number of dimensions
     public var rank: Int {
         return span.rank
     }
-    
+
     /// Convert a high-dimensional index into an integer index for a LinearType
     public func linearIndex(_ indices: [Int]) -> Int {
         precondition(indexIsValid(indices))
@@ -60,7 +60,7 @@ public extension TensorType {
         }
         return index
     }
-    
+
     /// Check that an index falls within the span
     public func indexIsValid(_ indices: [Int]) -> Bool {
         return indices.count == rank && indices.enumerated().all { (i, index) in
@@ -79,7 +79,6 @@ public protocol MutableTensorType: TensorType {
     /// Call `body(pointer)` with the mutable pointer to the beginning of the memory block
     mutating func withUnsafeMutablePointer<R>(_ body: (UnsafeMutablePointer<Element>) throws -> R) rethrows -> R
 }
-
 
 public extension MutableTensorType {
     /// Assign all values of a TensorType to this tensor.

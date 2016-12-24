@@ -30,8 +30,7 @@ public func gemm<
     where
     QTA.Element == Double,
     QTB.Element == Double,
-    QTC.Element == Double
- {
+    QTC.Element == Double {
     precondition(a.columns == b.rows, "Input matrices dimensions not compatible with multiplication")
     precondition(a.rows == c.rows, "Output matrix dimensions not compatible with multiplication")
     precondition(b.columns == c.columns, "Output matrix dimensions not compatible with multiplication")
@@ -68,21 +67,23 @@ public func inv<M: QuadraticType>(_ x: M) -> Matrix<Double> where M.Element == D
 }
 
 public func normalize<M: QuadraticType>(_ x: M) -> Matrix<Double> where M.Element == Double {
-    
+
     let inputMatrix = Matrix<Double>(x)
+
     var individualVectors:[[Double]] = []
     
     for i in 0..<inputMatrix.columns {
         let length = Int32(inputMatrix.column(i).count)
         let vector = ValueArray(inputMatrix.column(i)).map {Float($0)}
-        
+
         // Calculate l2-norm
         let two_norm = cblas_snrm2(length, vector, Int32(1))
         let normalizedVector = Array<Double>(inputMatrix.column(i)/Double(two_norm))
         individualVectors.append(normalizedVector)
     }
-    
+
     // Create a new matrix that will hold the normalized individual columns
+
     return Matrix(individualVectors)
 }
 
@@ -99,7 +100,7 @@ public func transpose<M: QuadraticType>(_ x: M) -> Matrix<Double> where M.Elemen
 public func +=<ML: MutableQuadraticType, MR: QuadraticType>(lhs: inout ML, rhs: MR) where ML.Element == Double, MR.Element == Double {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with addition")
     assert(lhs.span ≅ rhs.span)
-    
+
     for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
         lhs[lhsIndex] += rhs[rhsIndex]
     }
@@ -117,7 +118,7 @@ public func +<ML: QuadraticType, MR: QuadraticType>(lhs: ML, rhs: MR) -> Matrix<
 public func -=<ML: MutableQuadraticType, MR: QuadraticType>(lhs: inout ML, rhs: MR) where ML.Element == Double, MR.Element == Double {
     precondition(lhs.rows == rhs.rows && lhs.columns == rhs.columns, "Matrix dimensions not compatible with subtraction")
     assert(lhs.span ≅ rhs.span)
-    
+
     for (lhsIndex, rhsIndex) in zip(lhs.span, rhs.span) {
         lhs[lhsIndex] -= rhs[rhsIndex]
     }
@@ -128,7 +129,7 @@ public func -<ML: QuadraticType, MR: QuadraticType>(lhs: ML, rhs: MR) -> Matrix<
 
     var results = Matrix<Double>(lhs)
     results -= rhs
-    
+
     return results
 }
 
@@ -156,12 +157,10 @@ public func *<MR: QuadraticType>(lhs: Double, rhs: MR) -> Matrix<Double> where M
     return results
 }
 
-
 postfix operator ′
 public postfix func ′<M: QuadraticType>(value: M) -> Matrix<Double> where M.Element == Double {
     return transpose(value)
 }
-
 
 // MARK: - Float
 
@@ -173,8 +172,7 @@ public func gemm<
     where
     QTA.Element == Float,
     QTB.Element == Float,
-    QTC.Element == Float
-     {
+    QTC.Element == Float {
         precondition(a.columns == b.rows, "Input matrices dimensions not compatible with multiplication")
         precondition(a.rows == c.rows, "Output matrix dimensions not compatible with multiplication")
         precondition(b.columns == c.columns, "Output matrix dimensions not compatible with multiplication")
@@ -209,25 +207,25 @@ public func inv<M: QuadraticType>(_ x: M) -> Matrix<Float> where M.Element == Fl
     return results
 }
 
-public func normalize<M: QuadraticType>(_ x: M) -> Matrix<Float> where M.Element == Float  {
-    
+public func normalize<M: QuadraticType>(_ x: M) -> Matrix<Float> where M.Element == Float {
+
     let inputMatrix = Matrix<Float>(x)
+
     var individualVectors:[[Float]] = []
     
     for i in 0..<inputMatrix.columns {
         let length = Int32(inputMatrix.column(i).count)
         let vector = ValueArray(inputMatrix.column(i))
-        
-        
+
         // Calculate l2-norm
         let two_norm = cblas_snrm2(length, vector.pointer, Int32(1))
         let normalizedVector = Array<Float>(inputMatrix.column(i)/two_norm)
         individualVectors.append(normalizedVector)
     }
-    
+
     // Create a new matrix that will hold the normalized individual columns
     let results = Matrix<Float>(individualVectors)
-    
+
     return results
 }
 

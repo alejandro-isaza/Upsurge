@@ -26,17 +26,17 @@ class HyperbolicTests: XCTestCase {
     let n = 10000
 
     func testSinh() {
-        let values = (0...n).map{_ in drand48() * M_PI}
-        measureAndValidateMappedFunctionWithAccuracy(values, member: { sinh($0) }, mapped: { $0.map{ sinh($0) } }, accuracy: 0.0001)
+        let values = (0...n).map {_ in drand48() * M_PI}
+        measureAndValidateMappedFunctionWithAccuracy(values, member: { sinh($0) }, mapped: { $0.map { sinh($0) } }, accuracy: 0.0001)
     }
 
     func testCosh() {
-        let values = (0...n).map{_ in drand48() * M_PI}
-        measureAndValidateMappedFunctionWithAccuracy(values, member: { cosh($0) }, mapped: { $0.map{ cosh($0) } }, accuracy: 0.0001)
+        let values = (0...n).map {_ in drand48() * M_PI}
+        measureAndValidateMappedFunctionWithAccuracy(values, member: { cosh($0) }, mapped: { $0.map { cosh($0) } }, accuracy: 0.0001)
     }
 
     func testTanh() {
-        let values = (0...n).map{_ in drand48() * M_PI}
-        measureAndValidateMappedFunctionWithAccuracy(values, member: { tanh($0) }, mapped: { $0.map{ tanh($0) } }, accuracy: 0.0001)
+        let values = (0...n).map {_ in drand48() * M_PI}
+        measureAndValidateMappedFunctionWithAccuracy(values, member: { tanh($0) }, mapped: { $0.map { tanh($0) } }, accuracy: 0.0001)
     }
 }

@@ -94,7 +94,6 @@ public func atanh<C: LinearType>(_ x: C) -> ValueArray<Double> where C.Element =
     return results
 }
 
-
 // MARK: - Float
 
 /// Hyperbolic Sine
@@ -165,6 +164,6 @@ public func atanh<C: LinearType>(_ x: C) -> ValueArray<Float> where C.Element ==
     withPointer(x) { xp in
         vvatanhf(results.mutablePointer + results.startIndex, xp + x.startIndex, [Int32(x.count)])
     }
-    
+
     return results
 }

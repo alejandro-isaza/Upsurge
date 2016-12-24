@@ -74,7 +74,6 @@ public func autocorrelation<M: LinearType>(_ x: M, maxLag: Int) -> ValueArray<Do
     return correlation(signal, x)
 }
 
-
 // MARK: - Float
 
 /**

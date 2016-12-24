@@ -53,7 +53,7 @@ class RealMatrixTests: XCTestCase {
         let c = a * b
 
         let d = Matrix<Double>(rows: 2, columns: 2, elements: [10, 13, 22, 29] as ValueArray<Double>)
-        
+
         XCTAssertEqual(c, d)
 
         a *= b
@@ -108,13 +108,11 @@ class RealMatrixTests: XCTestCase {
         XCTAssertEqual(a, c)
     }
 
-    
-    
-    func testNormalization(){
+    func testNormalization() {
         let a = Matrix<Double>([[3, 5, 8], [4, 12, 15]])
         let b = normalize(a)
         let c = Matrix<Double>([[0.6, 0.8, 0.384615384615385], [0.923076923076923, 0.470588235294118, 0.882352941176471]])
-        
+
         XCTAssertEqualWithAccuracy(b.elements[0], c.elements[0], accuracy: 0.00001)
         XCTAssertEqualWithAccuracy(b.elements[1], c.elements[1], accuracy: 0.00001)
         XCTAssertEqualWithAccuracy(b.elements[2], c.elements[2], accuracy: 0.00001)
@@ -122,7 +120,7 @@ class RealMatrixTests: XCTestCase {
         XCTAssertEqualWithAccuracy(b.elements[4], c.elements[4], accuracy: 0.00001)
         XCTAssertEqualWithAccuracy(b.elements[5], c.elements[5], accuracy: 0.00001)
     }
-    
+
     func testInvert() {
         let a = Matrix<Double>(rows: 2, columns: 2, elements: [2, 6, -2, 4] as ValueArray<Double>)
         let b = inv(a)

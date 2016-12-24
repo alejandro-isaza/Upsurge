@@ -28,7 +28,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
     public var startIndex: Int
     public var endIndex: Int
     public var step: Int
-    
+
     public var span: Span {
         return Span(ranges: [startIndex ... endIndex - 1])
     }
@@ -56,7 +56,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
         self.endIndex = endIndex
         self.step = step
     }
-    
+
     public subscript(index: Index) -> Element {
         get {
             assert(indexIsValid(index))
@@ -67,7 +67,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
             base[index * step] = newValue
         }
     }
-        
+
     public subscript(intervals: [IntervalType]) -> Slice {
         get {
             assert(self.span.contains(intervals))
@@ -86,7 +86,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
             }
         }
     }
-    
+
     public subscript(intervals: [Int]) -> Element {
         get {
             assert(intervals.count == 1)
@@ -105,12 +105,13 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
     public func formIndex(after i: inout Index) {
         i += 1
     }
-    
+
     public var description: String {
         return "[\(map { "\($0)" }.joined(separator: ", "))]"
     }
 
     // MARK: - Equatable
+
 
     public static func ==(lhs: ValueArraySlice, rhs: Base) -> Bool {
         return lhs.count == rhs.count && lhs.elementsEqual(rhs)

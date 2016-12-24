@@ -57,7 +57,7 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
     open func formIndex(after i: inout Index) {
         i += 1
     }
-    
+
     open var span: Span {
         return Span(zeroTo: [endIndex])
     }
@@ -140,7 +140,7 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
             elements[index] = newValue
         }
     }
-    
+
     open subscript(indices: [Int]) -> Element {
         get {
             assert(indices.count == 1)
@@ -151,7 +151,7 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
             self[indices[0]] = newValue
         }
     }
-    
+
     open subscript(intervals: [IntervalType]) -> Slice {
         get {
             assert(intervals.count == 1)
@@ -178,7 +178,7 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
         elements.append(value)
     }
 
-    open func appendContentsOf<C : Collection>(_ values: C) where C.Iterator.Element == Element {
+    open func appendContentsOf<C: Collection>(_ values: C) where C.Iterator.Element == Element {
         elements.appendContentsOf(values)
     }
 

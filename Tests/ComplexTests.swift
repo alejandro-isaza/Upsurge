@@ -36,7 +36,7 @@ class ComplexTests: XCTestCase {
     func textScaleComplex() {
         var a: ComplexArray = [Complex(real: 1, imag: 1), Complex(real: 2, imag: 0)]
         a *= 2
-        
+
         XCTAssertEqual(a[0].real, 2.0)
         XCTAssertEqual(a[0].imag, 2.0)
         XCTAssertEqual(a[1].real, 4.0)
@@ -44,7 +44,7 @@ class ComplexTests: XCTestCase {
     }
 
     func testSumComplex() {
-        let values = ComplexArray((0..<n).map{ _ in
+        let values = ComplexArray((0..<n).map { _ in
             Complex(
                 real: Double(arc4random()) - Double(UInt32.max)/2,
                 imag: Double(arc4random()) - Double(UInt32.max)/2)

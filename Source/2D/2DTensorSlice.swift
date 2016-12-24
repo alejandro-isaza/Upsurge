@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equatable {
     public typealias Index = [Int]
     public typealias Slice = TwoDimensionalTensorSlice<Element>
@@ -26,11 +25,11 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
     open var arrangement: QuadraticArrangement {
         return .rowMajor
     }
-    
+
     open let rows: Int
     open let columns: Int
     open var stride: Int
-    
+
     var base: Tensor<Element>
     open var span: Span
 
@@ -49,29 +48,29 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
     open func withUnsafeMutablePointer<R>(_ body: (UnsafeMutablePointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeMutablePointer(body)
     }
-    
+
     open var step: Int {
         return base.elements.step
     }
-    
+
     init(base: Tensor<Element>, span: Span) {
         assert(span.dimensions.count == base.dimensions.count)
         self.base = base
         self.span = span
-        
+
         assert(base.spanIsValid(span))
-        assert(span.dimensions.reduce(0){ $0.1 > 1 ? $0.0 + 1 : $0.0 } <= 2)
+        assert(span.dimensions.reduce(0) { $0.1 > 1 ? $0.0 + 1 : $0.0 } <= 2)
         assert(span.dimensions.last! >= 1)
-        
+
         let rowIndex: Int = span.dimensions.index { $0 > 1 } ??
                            (span.dimensions.count - 2)
 
         rows = span.dimensions[rowIndex]
         columns = span.dimensions.last!
-        
+
         stride = span.dimensions.suffix(from: rowIndex + 1).reduce(1, *)
     }
-    
+
     open subscript(row: Int, column: Int) -> Element {
         get {
             return self[[row, column]]
@@ -80,7 +79,7 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
             self[[row, column]] = newValue
         }
     }
-    
+
     open subscript(indices: Index) -> Element {
         get {
             var index = span.startIndex
@@ -97,7 +96,7 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
             base[index] = newValue
         }
     }
-    
+
     open subscript(slice: [IntervalType]) -> Slice {
         get {
             let span = Span(base: self.span, intervals: slice)
@@ -109,7 +108,7 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
             self[span] = newValue
         }
     }
-    
+
     open subscript(slice: IntervalType...) -> Slice {
         get {
             return self[slice]
@@ -118,7 +117,7 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
             self[slice] = newValue
         }
     }
-    
+
     subscript(span: Span) -> Slice {
         get {
             assert(self.span.contains(span))
@@ -127,12 +126,12 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
         set {
             assert(self.span.contains(span))
             assert(span ≅ newValue.span)
-            for (lhsIndex, rhsIndex) in zip(span, newValue.span)  {
+            for (lhsIndex, rhsIndex) in zip(span, newValue.span) {
                 base[lhsIndex] = newValue[rhsIndex]
             }
         }
     }
-    
+
     open var isContiguous: Bool {
         let onesCount: Int = (dimensions.index { $0 != 1 }) ?? rank
 
@@ -143,10 +142,10 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
         } else {
             fullCount = rank
         }
-        
+
         return rank - fullCount - onesCount <= 1
     }
-    
+
     open func indexIsValid(_ indices: [Int]) -> Bool {
         assert(indices.count == rank)
         return indices.enumerated().all { (i, index) in

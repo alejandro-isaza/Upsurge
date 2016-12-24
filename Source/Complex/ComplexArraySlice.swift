@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-open class ComplexArraySlice<T: Real>: MutableLinearType  {
+open class ComplexArraySlice<T: Real>: MutableLinearType {
     public typealias Index = Int
     public typealias Element = Complex<T>
     public typealias Slice = ComplexArraySlice
-    
+
     let base: ComplexArray<T>
     
     open let startIndex: Index
@@ -48,7 +48,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType  {
     open func withUnsafeMutablePointer<R>(_ body: (UnsafeMutablePointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeMutablePointer(body)
     }
-    
+
     open var reals: ComplexArrayRealSlice<T> {
         get {
             return ComplexArrayRealSlice<T>(base: base, startIndex: startIndex, endIndex: 2*endIndex - 1, step: 2)
@@ -60,7 +60,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType  {
             }
         }
     }
-    
+
     open var imags: ComplexArrayRealSlice<T> {
         get {
             return ComplexArrayRealSlice<T>(base: base, startIndex: startIndex + 1, endIndex: 2*endIndex, step: 2)
@@ -72,7 +72,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType  {
             }
         }
     }
-    
+
     public required init(base: ComplexArray<T>, startIndex: Index, endIndex: Index, step: Int) {
         assert(base.startIndex <= startIndex && endIndex <= base.endIndex)
         self.base = base
@@ -80,7 +80,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType  {
         self.endIndex = endIndex
         self.step = step
     }
-    
+
     open subscript(index: Index) -> Element {
         get {
             precondition(0 <= index && index < count)
@@ -91,7 +91,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType  {
             base[index] = newValue
         }
     }
-    
+
     open subscript(indices: [Int]) -> Element {
         get {
             assert(indices.count == 1)
@@ -102,7 +102,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType  {
             self[indices[0]] = newValue
         }
     }
-    
+
     open subscript(intervals: [IntervalType]) -> Slice {
         get {
             assert(intervals.count == 1)

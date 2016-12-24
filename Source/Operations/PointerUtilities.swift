@@ -20,7 +20,6 @@
 
 import Foundation
 
-
 // MARK: One parameter
 
 /// Call `body(pointer)` with the pointer for the type
@@ -32,7 +31,6 @@ public func withPointer<T: TensorType, R>(_ t: T, body: (UnsafePointer<T.Element
 public func withPointer<T: MutableTensorType, R>(_ t: inout T, body: (UnsafeMutablePointer<T.Element>) throws -> R) rethrows -> R {
     return try t.withUnsafeMutablePointer(body)
 }
-
 
 // MARK: Two parameters
 
@@ -71,7 +69,6 @@ public func withPointers<T1: MutableTensorType, T2: MutableTensorType, R>(_ t1: 
         }
     }
 }
-
 
 // MARK: Three parameters
 

@@ -215,7 +215,6 @@ public func pow<MI: LinearType, MO: MutableLinearType>(_ x: MI, _ y: MI, results
     }
 }
 
-
 // MARK: - Float
 
 /// Compute the absolute value for each element in `x`, return a new `ValueArray` with the results

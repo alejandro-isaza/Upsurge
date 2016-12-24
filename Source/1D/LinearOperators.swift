@@ -189,7 +189,6 @@ public func •<ML: LinearType, MR: LinearType>(lhs: ML, rhs: MR) -> Double wher
     return dot(lhs, rhs)
 }
 
-
 // MARK: - Float
 
 public func +=<ML: MutableLinearType, MR: LinearType>(lhs: inout ML, rhs: MR) where ML.Element == Float, MR.Element == Float {

@@ -151,7 +151,6 @@ public func dot<ML: LinearType, MR: LinearType>(_ lhs: ML, _ rhs: MR) -> Double 
     return result
 }
 
-
 // MARK: - Float
 
 public func sum<M: LinearType>(_ x: M) -> Float where M.Element == Float {
