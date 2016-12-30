@@ -51,7 +51,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType {
 
     open var reals: ComplexArrayRealSlice<T> {
         get {
-            return ComplexArrayRealSlice<T>(base: base, startIndex: startIndex, endIndex: 2*endIndex - 1, step: 2)
+            return ComplexArrayRealSlice(base: base, startIndex: startIndex, endIndex: 2*endIndex - 1, step: 2)
         }
         set {
             precondition(newValue.count == reals.count)
@@ -63,7 +63,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType {
 
     open var imags: ComplexArrayRealSlice<T> {
         get {
-            return ComplexArrayRealSlice<T>(base: base, startIndex: startIndex + 1, endIndex: 2*endIndex, step: 2)
+            return ComplexArrayRealSlice(base: base, startIndex: startIndex + 1, endIndex: 2*endIndex, step: 2)
         }
         set {
             precondition(newValue.count == imags.count)
