@@ -21,11 +21,12 @@
 /// A `ValueArray` is similar to an `Array` but it's a `class` instead of a `struct` and it has a fixed size. As opposed to an `Array`, assigning a `ValueArray` to a new variable will not create a copy, it only creates a new reference. If any reference is modified all other references will reflect the change. To copy a `ValueArray` you have to explicitly call `copy()`.
 open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLiteral, CustomStringConvertible, Equatable {
     public typealias Index = Int
+    public typealias IndexDistance = Int
     public typealias Slice = ValueArraySlice<Element>
 
     internal(set) var mutablePointer: UnsafeMutablePointer<Element>
-    open internal(set) var capacity: Int
-    open internal(set) var count: Int
+    open internal(set) var capacity: IndexDistance
+    open internal(set) var count: IndexDistance
 
     open var startIndex: Index {
         return 0
@@ -35,7 +36,7 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
         return count
     }
 
-    open var step: Index {
+    open var step: IndexDistance {
         return 1
     }
 
@@ -64,14 +65,14 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
 
     /// Construct an uninitialized ValueArray with the given capacity
-    public required init(capacity: Int) {
+    public required init(capacity: IndexDistance) {
         mutablePointer = UnsafeMutablePointer.allocate(capacity: capacity)
         self.capacity = capacity
         self.count = 0
     }
 
     /// Construct an uninitialized ValueArray with the given size
-    public required init(count: Int) {
+    public required init(count: IndexDistance) {
         mutablePointer = UnsafeMutablePointer.allocate(capacity: count)
         self.capacity = count
         self.count = count
@@ -98,12 +99,12 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     }
 
     /// Construct a ValueArray of `count` elements, each initialized to `repeatedValue`.
-    public required convenience init(count: Int, repeatedValue: Element) {
+    public required convenience init(count: IndexDistance, repeatedValue: Element) {
         self.init(count: count) { repeatedValue }
     }
 
     /// Construct a ValueArray of `count` elements, each initialized with `initializer`.
-    public required init(count: Int, initializer: () -> Element) {
+    public required init(count: IndexDistance, initializer: () -> Element) {
         mutablePointer = UnsafeMutablePointer.allocate(capacity: count)
         capacity = count
         self.count = count
@@ -165,11 +166,11 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
         }
     }
 
-    open func index(after i: Int) -> Int {
+    open func index(after i: Index) -> Index {
         return i + 1
     }
 
-    open func formIndex(after i: inout Int) {
+    open func formIndex(after i: inout Index) {
         i += 1
     }
 
