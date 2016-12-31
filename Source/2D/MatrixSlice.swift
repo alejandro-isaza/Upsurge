@@ -20,11 +20,9 @@
 
 import Foundation
 
-open class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertible, Equatable {
+open class MatrixSlice<Element: Value>: MutableQuadraticType, CustomStringConvertible, Equatable {
     public typealias Index = (Int, Int)
     public typealias Slice = MatrixSlice<Element>
-    public typealias Element = T
-
 
     open let rows: Int
     open let columns: Int
@@ -170,7 +168,7 @@ open class MatrixSlice<T: Value>: MutableQuadraticType, CustomStringConvertible,
 extension MatrixSlice {
     // MARK: - Equatable
 
-    public static func ==(lhs: MatrixSlice, rhs: Matrix<T>) -> Bool {
+    public static func ==(lhs: MatrixSlice, rhs: Matrix<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
         return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
@@ -180,18 +178,18 @@ extension MatrixSlice {
         return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
 
-    public static func ==(lhs: MatrixSlice, rhs: Tensor<T>) -> Bool {
+    public static func ==(lhs: MatrixSlice, rhs: Tensor<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
 
         return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
 
-    public static func ==(lhs: MatrixSlice, rhs: TensorSlice<T>) -> Bool {
+    public static func ==(lhs: MatrixSlice, rhs: TensorSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
         return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
 
-    public static func ==(lhs: MatrixSlice, rhs: TwoDimensionalTensorSlice<T>) -> Bool {
+    public static func ==(lhs: MatrixSlice, rhs: TwoDimensionalTensorSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
         return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
     }
