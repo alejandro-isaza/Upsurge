@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 /// The `LinearType` protocol should be implemented by any collection that stores its values in a contiguous memory block. This is the building block for one-dimensional operations that are single-instruction, multiple-data (SIMD).
+
 public protocol LinearType: Collection, TensorType, CustomStringConvertible, CustomDebugStringConvertible, BidirectionalCollection {
 
     /// The index of the first valid element
