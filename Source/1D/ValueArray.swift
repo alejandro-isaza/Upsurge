@@ -170,14 +170,6 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
         }
     }
 
-    open func index(after i: Index) -> Index {
-        return i + 1
-    }
-
-    open func formIndex(after i: inout Index) {
-        i += 1
-    }
-
     open func copy() -> ValueArray {
         let copy = ValueArray(count: capacity)
         copy.mutablePointer.initialize(from: mutablePointer, count: count)
@@ -190,11 +182,12 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
         count += 1
     }
 
-    open func appendContentsOf<C: Collection>(_ values: C) where C.Iterator.Element == Element {
-        precondition(count + Int(values.count.toIntMax()) <= capacity)
+    open func append<S : Sequence>(contentsOf newElements: S) where S.Iterator.Element == Element {
+        let a = Array(newElements)
+        precondition(count + a.count <= capacity)
         let endPointer = mutablePointer + count
-        endPointer.initialize(from: values)
-        count += Int(values.count.toIntMax())
+        endPointer.initialize(from: a)
+        count += a.count
     }
 
     open func replaceSubrange<C : Collection>(_ subrange: Range<Index>, with newElements: C) where C.Iterator.Element == Element {

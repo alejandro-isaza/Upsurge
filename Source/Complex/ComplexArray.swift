@@ -171,7 +171,7 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
     }
 
     open func appendContentsOf<C: Collection>(_ values: C) where C.Iterator.Element == Element {
-        elements.appendContentsOf(values)
+        elements.append(contentsOf: values)
     }
 
     open func replaceSubrange<C: Collection>(_ subRange: Range<Index>, with newElements: C) where C.Iterator.Element == Element {
