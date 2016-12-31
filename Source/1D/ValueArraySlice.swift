@@ -21,13 +21,14 @@
 /// A slice of a `ValueArray`. Slices not only specify start and end indexes, they also specify a step size.
 public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringConvertible, Equatable {
     public typealias Index = Int
+    public typealias IndexDistance = Int
     public typealias Slice = ValueArraySlice<Element>
     public typealias Base = ValueArray<Element>
 
-    var base: Base
-    public var startIndex: Int
-    public var endIndex: Int
-    public var step: Int
+    public let base: Base
+    public let startIndex: Index
+    public let endIndex: Index
+    public let step: IndexDistance
 
     public var span: Span {
         return Span(ranges: [startIndex ... endIndex - 1])
@@ -49,7 +50,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
         return try base.withUnsafeMutablePointer(body)
     }
 
-    public init(base: Base, startIndex: Int, endIndex: Int, step: Int) {
+    public init(base: Base, startIndex: Index, endIndex: Index, step: IndexDistance) {
         assert(base.startIndex <= startIndex && endIndex <= base.endIndex)
         self.base = base
         self.startIndex = startIndex
