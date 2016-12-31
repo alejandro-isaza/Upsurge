@@ -36,17 +36,17 @@ public enum Interval: IntervalType, ExpressibleByIntegerLiteral {
     }
 
     public var start: Int? {
-        switch self {
-        case .all: return nil
-        case .range(let range): return range.lowerBound
+        if case let .range(r) = self {
+          return r.lowerBound
         }
+        return nil
     }
 
     public var end: Int? {
-        switch self {
-        case .all: return nil
-        case .range(let range): return range.upperBound + 1
+        if case let .range(r) = self {
+          return r.upperBound + 1
         }
+        return nil
     }
 }
 
