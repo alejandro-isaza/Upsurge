@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
+open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral, RangeReplaceableCollection {
     public typealias Index = Int
     public typealias Element = Complex<T>
     public typealias Slice = ComplexArraySlice<T>
@@ -92,6 +92,10 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
                 self.imags[i] = newValue[i]
             }
         }
+    }
+
+    public required convenience init() {
+        self.init(count: 0)
     }
 
     /// Construct an uninitialized ComplexArray with the given capacity
@@ -170,8 +174,8 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
         elements.append(value)
     }
 
-    open func appendContentsOf<C: Collection>(_ values: C) where C.Iterator.Element == Element {
-        elements.append(contentsOf: values)
+    open func append<S : Sequence>(contentsOf newElements: S) where S.Iterator.Element == Element {
+        elements.append(contentsOf: newElements)
     }
 
     open func replaceSubrange<C: Collection>(_ subRange: Range<Index>, with newElements: C) where C.Iterator.Element == Element {
