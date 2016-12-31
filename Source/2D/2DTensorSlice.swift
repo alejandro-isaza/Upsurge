@@ -28,9 +28,9 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
 
     open let rows: Int
     open let columns: Int
-    open var stride: Int
+    open let stride: Int
 
-    var base: Tensor<Element>
+    let base: Tensor<Element>
     open var span: Span
 
     open func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
