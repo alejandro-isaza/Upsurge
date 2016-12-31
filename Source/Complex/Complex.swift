@@ -21,13 +21,15 @@
 import Darwin
 
 public struct Complex<Element: Real>: Value {
-    public var real: Element = 0.0
-    public var imag: Element = 0.0
+    public let real: Element
+    public let imag: Element
 
-    public init() {}
+    public init() {
+        self.init(real: 0, imag: 0)
+    }
 
     public init(integerLiteral value: Int) {
-        real = Element(value)
+        self.init(real: Element(value), imag: 0)
     }
 
     public init(real: Element, imag: Element) {
