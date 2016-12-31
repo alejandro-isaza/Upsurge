@@ -206,14 +206,6 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
         return Matrix(rows: count, columns: 1, elements: self)
     }
 
-    open var description: String {
-        return "[\(map { "\($0)" }.joined(separator: ", "))]"
-    }
-
-    open var debugDescription: String {
-        return description
-    }
-
     // MARK: - Equatable
 
     public static func ==(lhs: ValueArray, rhs: ValueArray) -> Bool {

@@ -121,14 +121,6 @@ open class ComplexArraySlice<T: Real>: MutableLinearType {
         }
     }
 
-    open func index(after i: Index) -> Index {
-        return i + 1
-    }
-
-    open func formIndex(after i: inout Index) {
-        i += 1
-    }
-
     // MARK: - Equatable
 
     public static func ==(lhs: ComplexArraySlice, rhs: ComplexArraySlice) -> Bool {

@@ -50,14 +50,6 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
         return 1
     }
 
-    open func index(after i: Index) -> Index {
-        return i + 1
-    }
-
-    open func formIndex(after i: inout Index) {
-        i += 1
-    }
-
     open var span: Span {
         return Span(zeroTo: [endIndex])
     }

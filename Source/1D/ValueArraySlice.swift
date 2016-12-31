@@ -99,20 +99,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
         }
     }
 
-    public func index(after i: Index) -> Index {
-        return i + 1
-    }
-
-    public func formIndex(after i: inout Index) {
-        i += 1
-    }
-
-    public var description: String {
-        return "[\(map { "\($0)" }.joined(separator: ", "))]"
-    }
-
     // MARK: - Equatable
-
 
     public static func ==(lhs: ValueArraySlice, rhs: Base) -> Bool {
         return lhs.count == rhs.count && lhs.elementsEqual(rhs)

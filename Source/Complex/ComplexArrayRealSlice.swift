@@ -119,14 +119,6 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
         }
     }
 
-    public func index(after i: Index) -> Index {
-        return i + 1
-    }
-
-    public func formIndex(after i: inout Index) {
-        i += 1
-    }
-
     static public func ==(lhs: ComplexArrayRealSlice, rhs: ComplexArrayRealSlice) -> Bool {
         return lhs.count == rhs.count && lhs.elementsEqual(rhs)
     }
