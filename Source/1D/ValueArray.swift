@@ -176,9 +176,9 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
         return copy
     }
 
-    open func append(_ value: Element) {
+    open func append(_ newElement: Element) {
         precondition(count + 1 <= capacity)
-        mutablePointer[count] = value
+        mutablePointer[count] = newElement
         count += 1
     }
 

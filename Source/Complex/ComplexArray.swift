@@ -170,8 +170,8 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral, 
         return ComplexArray(elements)
     }
 
-    open func append(_ value: Element) {
-        elements.append(value)
+    open func append(_ newElement: Element) {
+        elements.append(newElement)
     }
 
     open func append<S : Sequence>(contentsOf newElements: S) where S.Iterator.Element == Element {
