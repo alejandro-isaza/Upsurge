@@ -31,7 +31,7 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
     open let stride: Int
 
     let base: Tensor<Element>
-    open var span: Span
+    open let span: Span
 
     open func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
         return try base.withUnsafeBufferPointer(body)

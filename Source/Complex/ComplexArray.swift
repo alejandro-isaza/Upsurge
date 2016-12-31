@@ -23,7 +23,7 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral, 
     public typealias Element = Complex<T>
     public typealias Slice = ComplexArraySlice<T>
 
-    private(set) var elements: ValueArray<Complex<T>>
+    private var elements: ValueArray<Complex<T>>
 
     open var count: Int {
         get {
