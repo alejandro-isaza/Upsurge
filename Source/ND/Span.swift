@@ -107,12 +107,9 @@ public struct Span: ExpressibleByArrayLiteral, Sequence {
     }
 
     func contains(_ other: Span) -> Bool {
-        for i in 0..<dimensions.count {
-            if other[i].startIndex < self[i].startIndex || self[i].endIndex < other[i].endIndex {
-                return false
-            }
+        return (0..<dimensions.count).all {
+            self[$0].startIndex <= other[$0].startIndex && other[$0].endIndex <= self[$0].endIndex
         }
-        return true
     }
 
     func contains(_ intervals: [IntervalType]) -> Bool {
