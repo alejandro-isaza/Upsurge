@@ -19,10 +19,14 @@
 // THE SOFTWARE.
 
 /// A `ValueArray` is similar to an `Array` but it's a `class` instead of a `struct` and it has a fixed size. As opposed to an `Array`, assigning a `ValueArray` to a new variable will not create a copy, it only creates a new reference. If any reference is modified all other references will reflect the change. To copy a `ValueArray` you have to explicitly call `copy()`.
-open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLiteral, CustomStringConvertible, Equatable {
+open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLiteral, CustomStringConvertible, Equatable, RangeReplaceableCollection {
     public typealias Index = Int
     public typealias IndexDistance = Int
     public typealias Slice = ValueArraySlice<Element>
+
+    convenience required public init() {
+      self.init(count: 0)
+    }
 
     internal(set) var mutablePointer: UnsafeMutablePointer<Element>
     open internal(set) var capacity: IndexDistance
@@ -193,9 +197,9 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
         count += Int(values.count.toIntMax())
     }
 
-    open func replaceRange<C: Collection>(_ subRange: Range<Index>, with newElements: C) where C.Iterator.Element == Element {
-        assert(subRange.lowerBound >= startIndex && subRange.upperBound <= endIndex)
-        (mutablePointer + subRange.lowerBound).initialize(from: newElements)
+    open func replaceSubrange<C : Collection>(_ subrange: Range<Index>, with newElements: C) where C.Iterator.Element == Element {
+        assert(subrange.lowerBound >= startIndex && subrange.upperBound <= endIndex)
+        (mutablePointer + subrange.lowerBound).initialize(from: newElements)
     }
 
     open func toRowMatrix() -> Matrix<Element> {

@@ -23,7 +23,7 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
     public typealias Element = Complex<T>
     public typealias Slice = ComplexArraySlice<T>
 
-    let elements: ValueArray<Complex<T>>
+    private(set) var elements: ValueArray<Complex<T>>
 
     open var count: Int {
         get {
@@ -174,8 +174,8 @@ open class ComplexArray<T: Real>: MutableLinearType, ExpressibleByArrayLiteral {
         elements.appendContentsOf(values)
     }
 
-    open func replaceRange<C: Collection>(_ subRange: Range<Index>, with newElements: C) where C.Iterator.Element == Element {
-        elements.replaceRange(subRange, with: newElements)
+    open func replaceSubrange<C: Collection>(_ subRange: Range<Index>, with newElements: C) where C.Iterator.Element == Element {
+        elements.replaceSubrange(subRange, with: newElements)
     }
 
     open func toRowMatrix() -> Matrix<Element> {

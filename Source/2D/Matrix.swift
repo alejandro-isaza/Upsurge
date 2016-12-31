@@ -102,7 +102,7 @@ open class Matrix<Element: Value>: MutableQuadraticType, Equatable, CustomString
         self.init(rows: rows, columns: cols)
 
         for (i, row) in contents.enumerated() {
-            elements.replaceRange(i*cols..<i*cols+min(cols, row.count), with: row)
+            elements.replaceSubrange(i*cols..<i*cols+min(cols, row.count), with: row)
         }
     }
 
