@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 /// The `LinearType` protocol should be implemented by any collection that stores its values in a contiguous memory block. This is the building block for one-dimensional operations that are single-instruction, multiple-data (SIMD).
-public protocol LinearType: Collection, TensorType {
+public protocol LinearType: Collection, TensorType, CustomStringConvertible, CustomDebugStringConvertible, BidirectionalCollection {
 
     /// The index of the first valid element
     var startIndex: Int { get }
@@ -42,6 +42,26 @@ public extension LinearType {
     public var dimensions: [Int] {
         return [count]
     }
+
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+
+    public func index(before i: Int) -> Int {
+        return i - 1
+    }
+
+    public func formIndex(after i: inout Int) {
+        i += 1
+    }
+
+    public var description: String {
+        return "[\(map { "\($0)" }.joined(separator: ", "))]"
+    }
+
+    public var debugDescription: String {
+        return description
+    }
 }
 
 public protocol MutableLinearType: LinearType, MutableTensorType {
@@ -62,7 +82,6 @@ extension Array: LinearType {
 
     public init<C: LinearType>(other: C) where C.Iterator.Element == Element {
         self = Array(other)
-
     }
 
     public subscript(indices: [Index]) -> Element {
@@ -77,7 +96,6 @@ extension Array: LinearType {
     }
 
     public subscript(intervals: [IntervalType]) -> Slice {
-
         get {
             assert(indices.count == 1)
             let start = intervals[0].start ?? startIndex
