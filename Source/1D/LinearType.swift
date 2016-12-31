@@ -79,7 +79,6 @@ extension Array: LinearType {
         return Span(ranges: [startIndex ... endIndex - 1])
     }
 
-
     public init<C: LinearType>(other: C) where C.Iterator.Element == Element {
         self = Array(other)
     }
