@@ -95,7 +95,7 @@ public func -<ML: LinearType>(lhs: Double, rhs: ML) -> ValueArray<Double> where 
     let results = ValueArray<Double>(count: rhs.count)
     withPointer(rhs) { rhsp in
         var scalarm: Double = -1
-        var scalara: Double = 0
+        var scalara: Double = lhs
         vDSP_vsmsaD(rhsp + rhs.startIndex, rhs.step, &scalarm, &scalara, results.mutablePointer + results.startIndex, results.step, vDSP_Length(rhs.count))
     }
     return results
@@ -264,7 +264,7 @@ public func -<ML: LinearType>(lhs: Float, rhs: ML) -> ValueArray<Float> where ML
     let results = ValueArray<Float>(count: rhs.count)
     withPointer(rhs) { rhsp in
         var scalarm: Float = -1
-        var scalara: Float = 0
+        var scalara: Float = lhs
         vDSP_vsmsa(rhsp + rhs.startIndex, rhs.step, &scalarm, &scalara, results.mutablePointer + results.startIndex, results.step, vDSP_Length(rhs.count))
     }
     return results

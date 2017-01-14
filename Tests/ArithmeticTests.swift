@@ -128,16 +128,30 @@ class ArithmeticTests: XCTestCase {
         }
     }
 
-  func testStd() {
+    func testStd() {
         let a1: ValueArray<Double> = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
         let r = std(a1)
         XCTAssertEqual(r, 2.0)
-  }
+    }
 
-  func testLinregress() {
+    func testLinregress() {
         let a1: ValueArray<Double> = [1.0, 2.0, 3.0, 4.0, 5.0]
         let (slope, intercept) = linregress(a1, a1)
         XCTAssertEqual(slope, 1.0)
         XCTAssertEqual(intercept, 0.0)
+    }
+    
+    func testScalarVectorSubtraction() {
+        let a1: ValueArray<Double> = [1.0, 2.0, 3.0]
+        let r1 = 1 - a1
+        XCTAssertEqual(r1[0], 0.0)
+        XCTAssertEqual(r1[1], -1.0)
+        XCTAssertEqual(r1[2], -2.0)
+        
+        let a2: ValueArray<Float> = [1.0, 2.0, 3.0]
+        let r2 = 1 - a2
+        XCTAssertEqual(r2[0], 0.0)
+        XCTAssertEqual(r2[1], -1.0)
+        XCTAssertEqual(r2[2], -2.0)
     }
 }
