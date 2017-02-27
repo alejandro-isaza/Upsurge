@@ -93,7 +93,7 @@ import Upsurge
 let a = ValueArray = [1.0, 2.0]
 // Tile source array 2 times in each directon,
 // returning a 2X4 block matrix
-let A = a.tile(m: 2, n:2)
+let A = a.tile(2, 2)
 
 let B = Matrix<Double>([
     [1.0,  2.0],
@@ -101,7 +101,7 @@ let B = Matrix<Double>([
 )]
 // Tile source matrix 2 times in each directon,
 // returning a 4x4 block matrix
-let r = B.tile(m: 2, n: 2)
+let r = B.tile(2, 2)
 ```
 
 ### Tensors

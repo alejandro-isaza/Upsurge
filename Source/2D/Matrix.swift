@@ -207,7 +207,7 @@ open class Matrix<Element: Value>: MutableQuadraticType, Equatable, CustomString
         return description
     }
     
-    open func tile(m: Int, n: Int) -> Matrix {
+    open func tile(_ m: Int, _ n: Int) -> Matrix {
         // Construct a block matrix of size m by n, with a copy of source matrix as each element.
         // m:  Specifies the number of times to copy along the vertical axis.
         // n:  Specifies the number of times to copy along the horizontal axis.

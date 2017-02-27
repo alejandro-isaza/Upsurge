@@ -211,7 +211,7 @@ class RealMatrixTests: XCTestCase {
             [1, 2],
             [3, 4]
             ])
-        let B = A.tile(m: 2, n: 2)
+        let B = A.tile(2, 2)
         
         XCTAssertEqual(B.count, 16)
         XCTAssertEqual(B.elements, [1.0, 2.0, 1.0, 2.0, 3.0, 4.0, 3.0, 4.0, 1.0, 2.0, 1.0, 2.0, 3.0, 4.0, 3.0, 4.0])

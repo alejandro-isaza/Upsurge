@@ -208,7 +208,7 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
         return Matrix(rows: rows, columns: columns, elements: self)
     }
     
-    open func tile(m: Int, n: Int) -> Matrix<Element> {
+    open func tile(_ m: Int, _ n: Int) -> Matrix<Element> {
         // Construct a block matrix of size m by n, with a copy of source as each element.
         // m:  Specifies the number of times to copy along the vertical axis.
         // n:  Specifies the number of times to copy along the horizontal axis.
