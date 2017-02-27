@@ -95,4 +95,12 @@ class RealArrayTests: XCTestCase {
         array[0..<10] = matrix.row(2)
         XCTAssertEqual(array, expected)
     }
+    
+    func testTile() {
+        let a: ValueArray<Double> = [1.0, 2.0]
+        let b = a.tile(m: 2, n: 2)
+        
+        XCTAssertEqual(b.count, 8)
+        XCTAssertEqual(b.elements, [1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 1.0, 2.0])
+    }
 }

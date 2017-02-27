@@ -202,6 +202,25 @@ open class ValueArray<Element: Value>: MutableLinearType, ExpressibleByArrayLite
     open func toColumnMatrix() -> Matrix<Element> {
         return Matrix(rows: count, columns: 1, elements: self)
     }
+    
+    open func toMatrix(rows: Int, columns:Int) -> Matrix<Element> {
+        precondition(rows*columns == count, "Element count must equal rows*columns")
+        return Matrix(rows: rows, columns: columns, elements: self)
+    }
+    
+    open func tile(m: Int, n: Int) -> Matrix<Element> {
+        // Construct a block matrix of size m by n, with a copy of source as each element.
+        // m:  Specifies the number of times to copy along the vertical axis.
+        // n:  Specifies the number of times to copy along the horizontal axis.
+        precondition(m > 0 && n > 0, "Minimum of 1 repeat in each direction is required")
+        let results = ValueArray(count: m*n*count)
+        let typeMemorySize = MemoryLayout<Element>.size
+        let bytesInSource = count*typeMemorySize
+        for i in 0..<m*n {
+            memcpy(results.mutablePointer+(i*count), pointer, bytesInSource)
+        }
+        return results.toMatrix(rows: m, columns: n*count)
+    }
 
     // MARK: - Equatable
 

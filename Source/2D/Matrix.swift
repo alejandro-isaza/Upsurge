@@ -206,6 +206,26 @@ open class Matrix<Element: Value>: MutableQuadraticType, Equatable, CustomString
 
         return description
     }
+    
+    open func tile(m: Int, n: Int) -> Matrix {
+        // Construct a block matrix of size m by n, with a copy of source matrix as each element.
+        // m:  Specifies the number of times to copy along the vertical axis.
+        // n:  Specifies the number of times to copy along the horizontal axis.
+        precondition(m > 0 && n > 0, "Minimum of 1 repeat in each direction is required")
+        let results = Matrix(rows: m*rows, columns: n*columns)
+        let typeMemorySize = MemoryLayout<Element>.size
+        let bytesInOneSourceRow = columns*typeMemorySize
+        let bytesInOneResultsRow = results.columns*typeMemorySize
+        for i in 0..<rows {
+            for j in 0..<n {
+                memcpy(results.elements.mutablePointer+(i*results.columns+j*columns), elements.pointer+(i*columns), bytesInOneSourceRow)
+            }
+        }
+        for i in 1..<m {
+            memcpy(results.elements.mutablePointer+(i*rows*results.columns), results.elements.pointer, rows*bytesInOneResultsRow)
+        }
+        return results
+    }
 
     // MARK: - Equatable
 

@@ -84,6 +84,25 @@ let B = inv(A) * C // [2.0, 1.0]′
 let r = A*B - C    // zero   
 ```
 
+### Tiling
+A block  `Matrix`  can be formed by repeating a 1-D `ValueArray` or 2-D `Matrix`  **mxn** times.
+
+```swift
+import Upsurge
+
+let a = ValueArray = [1.0, 2.0]
+// Tile source array 2 times in each directon,
+// returning a 2X4 block matrix
+let A = a.tile(m: 2, n:2)
+
+let B = Matrix<Double>([
+    [1.0,  2.0],
+    [3.0,  4.0]
+)]
+// Tile source matrix 2 times in each directon,
+// returning a 4x4 block matrix
+let r = B.tile(m: 2, n: 2)
+```
 
 ### Tensors
 

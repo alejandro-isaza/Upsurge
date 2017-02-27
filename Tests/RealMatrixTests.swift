@@ -205,4 +205,15 @@ class RealMatrixTests: XCTestCase {
         let col = A.column(0)
         XCTAssertEqual(col.description, "[1.0, 1.0]")
     }
+    
+    func testTile() {
+        let A = Matrix<Double>([
+            [1, 2],
+            [3, 4]
+            ])
+        let B = A.tile(m: 2, n: 2)
+        
+        XCTAssertEqual(B.count, 16)
+        XCTAssertEqual(B.elements, [1.0, 2.0, 1.0, 2.0, 3.0, 4.0, 3.0, 4.0, 1.0, 2.0, 1.0, 2.0, 3.0, 4.0, 3.0, 4.0])
+    }
 }
