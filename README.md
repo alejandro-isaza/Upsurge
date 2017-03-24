@@ -15,8 +15,19 @@ Upsurge is a fork of [Surge](https://github.com/mattt/Surge) which was abandoned
 
 ## Installation
 
-Upsurge supports both CocoaPods (`pod 'Upsurge'`) and Carthage (`github "aleph7/Upsurge"`). 
+Upsurge supports both CocoaPods (`pod 'Upsurge'`) and Carthage (`github "aleph7/Upsurge"`).  For macOS apps you can use the Swift Package Manager to install Upsurge by adding the proper description to your Package.swift file:
 
+```swift
+import PackageDescription
+
+let package = Package(
+    name: "YOUR_PROJECT_NAME",
+    targets: [],
+    dependencies: [
+        .Package(url: "https://github.com/aleph7/Upsurge.git", Version(0,8,.max)),
+    ]
+)
+```
 
 ## Usage
 

@@ -169,7 +169,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sequence.swift; path = Extensions/Sequence.swift; sourceTree = "<group>"; };
+		37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		614A101C1C6519610033D201 /* PointerUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointerUtilities.swift; sourceTree = "<group>"; };
 		614ACA701BD1CB7B00A1C13E /* Upsurge.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Upsurge.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		614ACA7A1BD1CB7B00A1C13E /* UpsurgeTests OSX.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UpsurgeTests OSX.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -272,14 +272,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		37BBC8061E0AFCEB00EE9D1B /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */,
-			);
-			name = Extensions;
-			sourceTree = "<group>";
-		};
 		614ACA661BD1CB7B00A1C13E = {
 			isa = PBXGroup;
 			children = (
@@ -306,14 +298,14 @@
 		614ACA8A1BD1CBB200A1C13E /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				37BBC8061E0AFCEB00EE9D1B /* Extensions */,
-				616832A31BFE6AED00C4DC6D /* Types */,
-				616832B71BFE6AED00C4DC6D /* Operations */,
-				616832A01BFE6AED00C4DC6D /* 1D */,
-				616832A81BFE6AED00C4DC6D /* 2D */,
-				616832AB1BFE6AED00C4DC6D /* ND */,
-				616832AF1BFE6AED00C4DC6D /* DSP */,
-				616832B21BFE6AED00C4DC6D /* Complex */,
+				D0811F5A1E84BC7E00EFBCB7 /* Extensions */,
+				D0811F5E1E84BCEA00EFBCB7 /* Types */,
+				D0811F5F1E84BD0200EFBCB7 /* Operations */,
+				D0811F601E84BD3200EFBCB7 /* 1D */,
+				D0811F611E84C01C00EFBCB7 /* 2D */,
+				D0811F621E84C02C00EFBCB7 /* ND */,
+				D0811F631E84C03C00EFBCB7 /* DSP */,
+				D0811F641E84C05900EFBCB7 /* Complex */,
 				614ACA9A1BD1CBB200A1C13E /* Upsurge.h */,
 			);
 			path = Source;
@@ -335,84 +327,6 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		616832A01BFE6AED00C4DC6D /* 1D */ = {
-			isa = PBXGroup;
-			children = (
-				61F5B7D31BFFF13A0017B4F2 /* LinearType.swift */,
-				61F5B7DC1C0103C70017B4F2 /* LinearOperators.swift */,
-				616832A11BFE6AED00C4DC6D /* ValueArray.swift */,
-				616832A21BFE6AED00C4DC6D /* ValueArraySlice.swift */,
-			);
-			path = 1D;
-			sourceTree = "<group>";
-		};
-		616832A31BFE6AED00C4DC6D /* Types */ = {
-			isa = PBXGroup;
-			children = (
-				616832A51BFE6AED00C4DC6D /* Interval.swift */,
-				616832A61BFE6AED00C4DC6D /* Real.swift */,
-				616832A71BFE6AED00C4DC6D /* Value.swift */,
-			);
-			path = Types;
-			sourceTree = "<group>";
-		};
-		616832A81BFE6AED00C4DC6D /* 2D */ = {
-			isa = PBXGroup;
-			children = (
-				61F5B7D01BFFF0DD0017B4F2 /* QuadraticType.swift */,
-				616832A91BFE6AED00C4DC6D /* Matrix.swift */,
-				616832AA1BFE6AED00C4DC6D /* MatrixArithmetic.swift */,
-				8C3D09611C1A3536009144CA /* MatrixSlice.swift */,
-				8C3D09641C1B4025009144CA /* 2DTensorSlice.swift */,
-			);
-			path = 2D;
-			sourceTree = "<group>";
-		};
-		616832AB1BFE6AED00C4DC6D /* ND */ = {
-			isa = PBXGroup;
-			children = (
-				8C3D095B1C18E6DE009144CA /* TensorType.swift */,
-				616832AC1BFE6AED00C4DC6D /* Span.swift */,
-				616832AD1BFE6AED00C4DC6D /* Tensor.swift */,
-				616832AE1BFE6AED00C4DC6D /* TensorSlice.swift */,
-			);
-			path = ND;
-			sourceTree = "<group>";
-		};
-		616832AF1BFE6AED00C4DC6D /* DSP */ = {
-			isa = PBXGroup;
-			children = (
-				616832B01BFE6AED00C4DC6D /* DSP.swift */,
-				616832B11BFE6AED00C4DC6D /* FFT.swift */,
-			);
-			path = DSP;
-			sourceTree = "<group>";
-		};
-		616832B21BFE6AED00C4DC6D /* Complex */ = {
-			isa = PBXGroup;
-			children = (
-				616832B31BFE6AED00C4DC6D /* Complex.swift */,
-				616832B41BFE6AED00C4DC6D /* ComplexArithmetic.swift */,
-				616832B51BFE6AED00C4DC6D /* ComplexArray.swift */,
-				8C8684DC1C1E4388007306DB /* ComplexArraySlice.swift */,
-				616832B61BFE6AED00C4DC6D /* ComplexArrayRealSlice.swift */,
-			);
-			path = Complex;
-			sourceTree = "<group>";
-		};
-		616832B71BFE6AED00C4DC6D /* Operations */ = {
-			isa = PBXGroup;
-			children = (
-				616832B81BFE6AED00C4DC6D /* Arithmetic.swift */,
-				616832B91BFE6AED00C4DC6D /* Auxiliary.swift */,
-				616832BA1BFE6AED00C4DC6D /* Exponential.swift */,
-				616832BB1BFE6AED00C4DC6D /* Hyperbolic.swift */,
-				616832BC1BFE6AED00C4DC6D /* Trigonometric.swift */,
-				614A101C1C6519610033D201 /* PointerUtilities.swift */,
-			);
-			path = Operations;
-			sourceTree = "<group>";
-		};
 		D0525AA61E8405AA008D1E6D /* UpsurgeTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,6 +346,92 @@
 				D0525AE71E84066D008D1E6D /* XCTestCase+Surge.swift */,
 			);
 			path = UpsurgeTests;
+			sourceTree = "<group>";
+		};
+		D0811F5A1E84BC7E00EFBCB7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				37BBC8071E0AFDDB00EE9D1B /* Sequence.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		D0811F5E1E84BCEA00EFBCB7 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				616832A51BFE6AED00C4DC6D /* Interval.swift */,
+				616832A61BFE6AED00C4DC6D /* Real.swift */,
+				616832A71BFE6AED00C4DC6D /* Value.swift */,
+			);
+			name = Types;
+			sourceTree = "<group>";
+		};
+		D0811F5F1E84BD0200EFBCB7 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				616832B81BFE6AED00C4DC6D /* Arithmetic.swift */,
+				616832B91BFE6AED00C4DC6D /* Auxiliary.swift */,
+				616832BA1BFE6AED00C4DC6D /* Exponential.swift */,
+				616832BB1BFE6AED00C4DC6D /* Hyperbolic.swift */,
+				616832BC1BFE6AED00C4DC6D /* Trigonometric.swift */,
+				614A101C1C6519610033D201 /* PointerUtilities.swift */,
+			);
+			name = Operations;
+			sourceTree = "<group>";
+		};
+		D0811F601E84BD3200EFBCB7 /* 1D */ = {
+			isa = PBXGroup;
+			children = (
+				61F5B7D31BFFF13A0017B4F2 /* LinearType.swift */,
+				61F5B7DC1C0103C70017B4F2 /* LinearOperators.swift */,
+				616832A11BFE6AED00C4DC6D /* ValueArray.swift */,
+				616832A21BFE6AED00C4DC6D /* ValueArraySlice.swift */,
+			);
+			name = 1D;
+			sourceTree = "<group>";
+		};
+		D0811F611E84C01C00EFBCB7 /* 2D */ = {
+			isa = PBXGroup;
+			children = (
+				61F5B7D01BFFF0DD0017B4F2 /* QuadraticType.swift */,
+				616832A91BFE6AED00C4DC6D /* Matrix.swift */,
+				616832AA1BFE6AED00C4DC6D /* MatrixArithmetic.swift */,
+				8C3D09611C1A3536009144CA /* MatrixSlice.swift */,
+				8C3D09641C1B4025009144CA /* 2DTensorSlice.swift */,
+			);
+			name = 2D;
+			sourceTree = "<group>";
+		};
+		D0811F621E84C02C00EFBCB7 /* ND */ = {
+			isa = PBXGroup;
+			children = (
+				8C3D095B1C18E6DE009144CA /* TensorType.swift */,
+				616832AC1BFE6AED00C4DC6D /* Span.swift */,
+				616832AD1BFE6AED00C4DC6D /* Tensor.swift */,
+				616832AE1BFE6AED00C4DC6D /* TensorSlice.swift */,
+			);
+			name = ND;
+			sourceTree = "<group>";
+		};
+		D0811F631E84C03C00EFBCB7 /* DSP */ = {
+			isa = PBXGroup;
+			children = (
+				616832B01BFE6AED00C4DC6D /* DSP.swift */,
+				616832B11BFE6AED00C4DC6D /* FFT.swift */,
+			);
+			name = DSP;
+			sourceTree = "<group>";
+		};
+		D0811F641E84C05900EFBCB7 /* Complex */ = {
+			isa = PBXGroup;
+			children = (
+				616832B31BFE6AED00C4DC6D /* Complex.swift */,
+				616832B41BFE6AED00C4DC6D /* ComplexArithmetic.swift */,
+				616832B51BFE6AED00C4DC6D /* ComplexArray.swift */,
+				8C8684DC1C1E4388007306DB /* ComplexArraySlice.swift */,
+				616832B61BFE6AED00C4DC6D /* ComplexArrayRealSlice.swift */,
+			);
+			name = Complex;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
