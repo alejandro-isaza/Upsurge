@@ -30,7 +30,7 @@ public struct ComplexArrayRealSlice<T: Real>: MutableLinearType {
     public let step: Int
 
     public var span: Span {
-        return Span(ranges: [startIndex ... endIndex - 1])
+        return Span(ranges: [(startIndex ... endIndex - 1).map { $0 }])
     }
 
     public func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {

@@ -77,7 +77,7 @@ extension Array: LinearType {
     }
 
     public var span: Span {
-        return Span(ranges: [startIndex ... endIndex - 1])
+        return Span(ranges: [(startIndex ... endIndex - 1).map { $0 }])
     }
 
     public init<C: LinearType>(other: C) where C.Iterator.Element == Element {

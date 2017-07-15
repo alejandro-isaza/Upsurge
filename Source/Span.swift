@@ -20,16 +20,16 @@
 
 /// Span is a collection of Ranges to specify a multi-dimensional slice of a Tensor.
 public struct Span: ExpressibleByArrayLiteral, Sequence {
-    public typealias Element = CountableClosedRange<Int>
+    public typealias Element = [Int]
 
     private var ranges: [Element]
 
     public var startIndex: [Int] {
-        return ranges.map { $0.lowerBound }
+        return ranges.map { $0.first! }
     }
 
     public var endIndex: [Int] {
-        return ranges.map { $0.upperBound + 1 }
+        return ranges.map { $0.last! + 1 }
     }
 
     public var count: Int {
@@ -57,10 +57,10 @@ public struct Span: ExpressibleByArrayLiteral, Sequence {
         var ranges = [Element]()
 
         for (i, interval) in intervals.enumerated() {
-            let start = interval.start ?? base[i].lowerBound
-            let end = interval.end ?? base[i].upperBound + 1
-            assert(base[i].lowerBound <= start && end <= base[i].upperBound + 1)
-            ranges.append(start ... end - 1)
+            let start = interval.start ?? base[i].first!
+            let end = interval.end ?? base[i].last! + 1
+            assert(base[i].first! <= start && end <= base[i].last! + 1)
+            ranges.append((start ... end - 1).map { $0 })
         }
         self.init(ranges: ranges)
     }
@@ -71,7 +71,7 @@ public struct Span: ExpressibleByArrayLiteral, Sequence {
             let start = intervals[i].start ?? 0
             let end = intervals[i].end ?? dimensions[i]
             assert(0 <= start && end <= dimensions[i])
-            ranges.append(start ... end - 1)
+            ranges.append((start ... end - 1).map { $0 })
         }
         self.init(ranges: ranges)
     }
@@ -82,7 +82,7 @@ public struct Span: ExpressibleByArrayLiteral, Sequence {
     }
 
     public init(start: [Int], end: [Int]) {
-        ranges = zip(start, end).map { $0...$1 - 1 }
+        ranges = zip(start, end).map { ($0...$1 - 1).map { $0 } }
     }
 
     public init(start: [Int], length: [Int]) {
@@ -115,9 +115,9 @@ public struct Span: ExpressibleByArrayLiteral, Sequence {
     public func contains(_ intervals: [IntervalType]) -> Bool {
         assert(dimensions.count == intervals.count)
         for i in 0..<dimensions.count {
-            let start = intervals[i].start ?? self[i].lowerBound
-            let end = intervals[i].end ?? self[i].upperBound + 1
-            if start < self[i].lowerBound || self[i].upperBound + 1 < end {
+            let start = intervals[i].start ?? self[i].first!
+            let end = intervals[i].end ?? self[i].last! + 1
+            if start < self[i].first! || self[i].last! + 1 < end {
                 return false
             }
         }
@@ -154,13 +154,13 @@ public class SpanGenerator: IteratorProtocol {
             return false
         }
 
-        if presentIndex[position] < span[position].upperBound {
+        if presentIndex[position] < span[position].last! {
             presentIndex[position] += 1
         } else {
             if !incrementIndex(position - 1) {
                 return false
             }
-            presentIndex[position] = span[position].lowerBound
+            presentIndex[position] = span[position].first!
         }
 
         return true

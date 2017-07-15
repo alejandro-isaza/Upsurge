@@ -30,7 +30,7 @@ open class ComplexArraySlice<T: Real>: MutableLinearType {
     open let step: Index
 
     open var span: Span {
-        return Span(ranges: [startIndex ... endIndex - 1])
+        return Span(ranges: [(startIndex ... endIndex - 1).map { $0 }])
     }
 
     open func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {

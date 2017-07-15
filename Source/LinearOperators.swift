@@ -55,7 +55,7 @@ public func +<ML: LinearType>(lhs: ML, rhs: Double) -> ValueArray<Double> where 
     return results
 }
 
-public func +<ML: LinearType, MR: LinearType>(lhs: Double, rhs: MR) -> ValueArray<Double> where ML.Element == Double, MR.Element == Double {
+public func +<MR: LinearType>(lhs: Double, rhs: MR) -> ValueArray<Double> where MR.Element == Double {
     return rhs + lhs
 }
 
@@ -224,7 +224,7 @@ public func +<ML: LinearType>(lhs: ML, rhs: Float) -> ValueArray<Float> where ML
     return results
 }
 
-public func +<ML: LinearType, MR: LinearType>(lhs: Float, rhs: MR) -> ValueArray<Float> where ML.Element == Float, MR.Element == Float {
+public func +<MR: LinearType>(lhs: Float, rhs: MR) -> ValueArray<Float> where MR.Element == Float {
     return rhs + lhs
 }
 

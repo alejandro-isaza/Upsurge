@@ -31,7 +31,7 @@ public struct ValueArraySlice<Element: Value>: MutableLinearType, CustomStringCo
     public let step: IndexDistance
 
     public var span: Span {
-        return Span(ranges: [startIndex ... endIndex - 1])
+        return Span(ranges: [(startIndex ... endIndex - 1).map { $0 }])
     }
 
     public func withUnsafeBufferPointer<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R {
