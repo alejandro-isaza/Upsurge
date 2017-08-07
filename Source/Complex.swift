@@ -68,11 +68,11 @@ public struct Complex<Element: Real>: Value {
     }
 }
 
-public func ==<T: Real>(lhs: Complex<T>, rhs: Complex<T>) -> Bool {
+public func ==<T>(lhs: Complex<T>, rhs: Complex<T>) -> Bool {
     return lhs.real == rhs.real && lhs.imag == rhs.imag
 }
 
-public func <<T: Real>(lhs: Complex<T>, rhs: Complex<T>) -> Bool {
+public func <<T>(lhs: Complex<T>, rhs: Complex<T>) -> Bool {
     return lhs.real < rhs.real || (lhs.real == rhs.real && lhs.imag < rhs.imag)
 }
 

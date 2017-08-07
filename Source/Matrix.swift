@@ -76,8 +76,8 @@ open class Matrix<Element: Value>: MutableQuadraticType, Equatable, CustomString
 
     /// Construct a Matrix of `rows` by `columns` with every the given elements in row-major order
     public init<M: LinearType>(rows: Int, columns: Int, elements: M) where M.Element == Element {
-        assert(rows * columns == elements.count)
-        self.rows = rows
+      assert(rows * columns == elements.count)
+      self.rows = rows
         self.columns = columns
         self.elements = ValueArray(elements)
     }
