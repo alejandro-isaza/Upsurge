@@ -123,7 +123,7 @@ open class Matrix<Element: Value>: MutableQuadraticType, Equatable, CustomString
         self.init(rows: rows, columns: cols)
         
         for (i, row) in contents.enumerated() {
-            elements.replaceSubrange(i*cols..<i*cols+min(cols, row.count), with: row.map{ $0 })
+            elements.replaceSubrange(i*cols..<i*cols+min(cols, row.count), with: row)
         }
         
     }
