@@ -23,6 +23,22 @@ import Upsurge
 import XCTest
 
 class RealMatrixTests: XCTestCase {
+    
+    func testInit() {
+        let rowZero = [0.2, 0.3]
+        let rowOne = [0.1, 0.5]
+        
+        let a = Matrix<Double>([rowZero, rowOne])
+        
+        let arrayZero = ValueArray<Double>(rowZero)
+        let arrayOne = ValueArray<Double>(rowOne)
+        
+        let b = Matrix<Double>([arrayZero, arrayOne])
+        
+        XCTAssertEqual(a, b)
+    }
+    
+    
     func testAdd() {
         var a = Matrix<Double>(rows: 2, columns: 2, elements: [1, 2, 3, 4] as ValueArray<Double>)
         let b = Matrix<Double>(rows: 2, columns: 2, elements: [2, 3, 4, 1] as ValueArray<Double>)
