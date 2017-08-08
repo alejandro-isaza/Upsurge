@@ -33,8 +33,8 @@ public struct Complex<Element: Real>: Value {
     }
 
     public init(real: Element, imag: Element) {
-        self.real = real
-        self.imag = imag
+      self.real = real
+      self.imag = imag
     }
 
     public var magnitude: Element {
