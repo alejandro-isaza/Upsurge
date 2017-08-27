@@ -59,7 +59,7 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
         self.span = span
 
         assert(base.spanIsValid(span))
-        assert(span.dimensions.reduce(0) { $0.1 > 1 ? $0.0 + 1 : $0.0 } <= 2)
+        assert(span.dimensions.reduce(0) { (result, arg) in arg > 1 ? result + 1 : result } <= 2)
         assert(span.dimensions.last! >= 1)
 
         let rowIndex: Int = span.dimensions.index { $0 > 1 } ??
