@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 /// A real number
-public protocol Real: FloatingPoint, ExpressibleByFloatLiteral, CustomStringConvertible, Hashable {}
+public protocol Real: FloatingPoint, ExpressibleByFloatLiteral, CustomStringConvertible {}
 
 extension Double: Real {}
 extension Float: Real {}
