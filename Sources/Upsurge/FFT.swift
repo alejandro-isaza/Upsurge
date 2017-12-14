@@ -28,6 +28,7 @@ open class FFTDouble {
     fileprivate var imag: ValueArray<Double>
 
     public init(inputLength: Int) {
+        assert(inputLength.nonzeroBitCount == 1, "input length must be a power of 2")
         let maxLengthLog2 = vDSP_Length(ceil(log2(Double(inputLength))))
         maxLength = vDSP_Length(exp2(Double(maxLengthLog2)))
         setup = vDSP_create_fftsetupD(maxLengthLog2, FFTRadix(kFFTRadix2))!
@@ -115,6 +116,7 @@ open class FFTFloat {
     fileprivate var imag: ValueArray<Float>
 
     public init(inputLength: Int) {
+        assert(inputLength.nonzeroBitCount == 1, "input length must be a power of 2")
         let maxLengthLog2 = vDSP_Length(ceil(log2(Float(inputLength))))
         maxLength = vDSP_Length(exp2(Float(maxLengthLog2)))
         setup = vDSP_create_fftsetupD(maxLengthLog2, FFTRadix(kFFTRadix2))!
