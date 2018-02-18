@@ -119,7 +119,7 @@ open class FFTFloat {
         assert(inputLength.nonzeroBitCount == 1, "input length must be a power of 2")
         let maxLengthLog2 = vDSP_Length(log2(Float(inputLength))) + 1
         maxLength = vDSP_Length(exp2(Float(maxLengthLog2)))
-        setup = vDSP_create_fftsetupD(maxLengthLog2, FFTRadix(kFFTRadix2))!
+        setup = vDSP_create_fftsetup(maxLengthLog2, FFTRadix(kFFTRadix2))!
 
         real = ValueArray<Float>(count: Int(maxLength))
         imag = ValueArray<Float>(count: Int(maxLength))
