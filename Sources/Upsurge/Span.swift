@@ -111,7 +111,7 @@ public struct Span: ExpressibleByArrayLiteral, Sequence {
     }
 
     public func contains(_ other: Span) -> Bool {
-        return (0..<dimensions.count).all {
+        return (0..<dimensions.count).allSatisfy {
             self[$0].startIndex <= other[$0].startIndex && other[$0].endIndex <= self[$0].endIndex
         }
     }

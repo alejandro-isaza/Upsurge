@@ -148,7 +148,7 @@ open class TwoDimensionalTensorSlice<Element: Value>: MutableQuadraticType, Equa
 
     open func indexIsValid(_ indices: [Int]) -> Bool {
         assert(indices.count == rank)
-        return indices.enumerated().all { (i, index) in
+        return indices.enumerated().allSatisfy { (i, index) in
             self.span[i].contains(index)
         }
     }

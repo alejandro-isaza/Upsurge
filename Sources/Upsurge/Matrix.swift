@@ -277,7 +277,7 @@ open class Matrix<Element: Value>: MutableQuadraticType, Equatable, CustomString
 
     public static func == (lhs: Matrix, rhs: Slice) -> Bool {
         assert(lhs.span ≅ rhs.span)
-        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
+        return zip(lhs.span, rhs.span).allSatisfy { lhs[$0] == rhs[$1] }
     }
 
     public static func == (lhs: Matrix, rhs: Tensor<Element>) -> Bool {
@@ -286,12 +286,12 @@ open class Matrix<Element: Value>: MutableQuadraticType, Equatable, CustomString
 
     public static func == (lhs: Matrix, rhs: TensorSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
-        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
+        return zip(lhs.span, rhs.span).allSatisfy { lhs[$0] == rhs[$1] }
     }
 
     public static func == (lhs: Matrix, rhs: TwoDimensionalTensorSlice<Element>) -> Bool {
         assert(lhs.span ≅ rhs.span)
-        return zip(lhs.span, rhs.span).all { lhs[$0] == rhs[$1] }
+        return zip(lhs.span, rhs.span).allSatisfy { lhs[$0] == rhs[$1] }
     }
 }
 

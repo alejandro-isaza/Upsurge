@@ -59,7 +59,7 @@ public extension TensorType {
 
     /// Check that an index falls within the span
     public func indexIsValid(_ indices: [Int]) -> Bool {
-        return indices.count == rank && indices.enumerated().all { (i, index) in
+        return indices.count == rank && indices.enumerated().allSatisfy { (i, index) in
             self.span[i].contains(index)
         }
     }
