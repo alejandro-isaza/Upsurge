@@ -46,11 +46,11 @@ public protocol QuadraticType: TensorType {
 
 public extension QuadraticType {
     /// The number of valid element in the memory block, taking into account the step size.
-    public var count: Int {
+    var count: Int {
         return rows * columns
     }
 
-    public var dimensions: [Int] {
+    var dimensions: [Int] {
         if arrangement == .rowMajor {
             return [rows, columns]
         } else {

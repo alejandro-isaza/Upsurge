@@ -116,10 +116,10 @@ open class TensorSlice<Element: Value>: MutableTensorType, Equatable {
     }
 
     open var isContiguous: Bool {
-        let onesCount: Int = (dimensions.index { $0 != 1 }) ?? rank
+        let onesCount: Int = (dimensions.firstIndex { $0 != 1 }) ?? rank
         let diff = (0..<rank).map { dimensions[$0] - base.dimensions[$0] }.reversed()
         let fullCount: Int
-        if let index = (diff.index { $0 != 0 }), index.base < count {
+        if let index = (diff.firstIndex { $0 != 0 }), index.base < count {
             fullCount = rank - index.base
         } else {
             fullCount = rank
